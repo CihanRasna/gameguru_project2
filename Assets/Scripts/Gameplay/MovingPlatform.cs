@@ -1,13 +1,15 @@
 using UnityEngine;
 using Zenject;
+using System;
+using Random = UnityEngine.Random;
 
 namespace Gameplay
 {
     public class MovingPlatform : MonoBehaviour, IPlatform
     {
         public float MoveSpeed => _gameSettings.moveSpeed;
-        public float movementRange = 2.5f;
-        private int _direction = 1;
+        public float movementRange = 10f;
+        private int _direction;
         [SerializeField] private BoxCollider boxCollider;
         private Renderer _rend;
         private MaterialPropertyBlock _propBlock;
@@ -15,6 +17,9 @@ namespace Gameplay
         public bool IsMoving { get; private set; } = false;
 
         private GameSettings _gameSettings;
+        private IPlatform _targetPlatform;
+
+        public event Action OnFall;
 
         [Inject]
         public void Construct(GameSettings settings)
@@ -22,12 +27,22 @@ namespace Gameplay
             _gameSettings = settings;
         }
 
+        public void SetTargetPlatform(IPlatform target)
+        {
+            _targetPlatform = target;
+        }
+
+        public void Initialize(Vector3 startPos, bool moveRight)
+        {
+            _direction = moveRight ? 1 : -1;
+            transform.position = startPos;
+            SetColor(GetRandomColor());
+        }
+
         private void Start()
         {
-            var pos = transform.position;
-            pos.x = 0f;
-            transform.position = pos;
-            SetColor(GetRandomColor());
+            _rend ??= GetComponent<Renderer>();
+            _propBlock ??= new MaterialPropertyBlock();
         }
 
         public void StartMoving()
@@ -44,15 +59,52 @@ namespace Gameplay
         {
             if (!IsMoving) return;
 
+            float previousX = transform.position.x;
+
             transform.position += Vector3.right * (_direction * MoveSpeed * Time.deltaTime);
 
-            var x = transform.position.x;
-            if (x < -movementRange || x > movementRange)
+            float currentX = transform.position.x;
+
+            if ((_direction > 0 && currentX > previousX) || (_direction < 0 && currentX < previousX))
             {
-                _direction *= -1;
-                var clampedX = Mathf.Clamp(x, -movementRange, movementRange);
-                transform.position = new Vector3(clampedX, transform.position.y, transform.position.z);
+                CheckIfMissedTarget();
             }
+        }
+
+        private void CheckIfMissedTarget()
+        {
+            if (_targetPlatform == null) return;
+
+            float baseX = _targetPlatform.GetPosition().x;
+            float baseHalf = _targetPlatform.GetWidth() / 2f;
+
+            float myX = GetPosition().x;
+            float myHalf = GetWidth() / 2f;
+
+            if (_direction > 0) // Sağ (pozitif) yönünde hareket
+            {
+                // Eğer platformun sol ucu, hedef platformun sağ ucunu geçtiyse düş
+                if (myX - myHalf > baseX + baseHalf)
+                    Fall();
+            }
+            else if (_direction < 0) // Sol (negatif) yönünde hareket
+            {
+                // Eğer platformun sağ ucu, hedef platformun sol ucunu geçtiyse düş
+                if (myX + myHalf < baseX - baseHalf)
+                    Fall();
+            }
+        }
+
+
+        public void Fall()
+        {
+            Debug.Log("⬇ Platform kaçtı, düşüyor.");
+            IsMoving = false;
+
+            if (!TryGetComponent<Rigidbody>(out var rb))
+                rb = gameObject.AddComponent<Rigidbody>();
+
+            OnFall?.Invoke();
         }
 
         private Color GetRandomColor()
@@ -64,12 +116,16 @@ namespace Gameplay
             return _gameSettings.platformColors[index];
         }
 
-        private void SetColor(Color color)
+        public void SetColor(Color color)
         {
-            if (!TryGetComponent(out Renderer myRenderer)) return;
             _currentColor = color;
-            _rend = myRenderer;
-            _propBlock ??= new MaterialPropertyBlock();
+
+            if (_rend == null)
+                _rend = GetComponent<Renderer>();
+
+            if (_propBlock == null)
+                _propBlock = new MaterialPropertyBlock();
+
             _rend.GetPropertyBlock(_propBlock);
             _propBlock.SetColor("_BaseColor", _currentColor);
             _rend.SetPropertyBlock(_propBlock);
@@ -84,14 +140,12 @@ namespace Gameplay
             partRenderer.SetPropertyBlock(pb);
         }
 
-
         public void MoveTo(Vector3 position)
         {
             transform.position = position;
         }
 
         public float GetWidth() => boxCollider.size.x * transform.localScale.x;
-
 
         public Vector3 GetPosition() => transform.position;
 
@@ -104,6 +158,7 @@ namespace Gameplay
             if (overlap <= 0f)
             {
                 Debug.Log("Tamamen dışta, platform düşmeli!");
+                Fall();
                 return;
             }
 
@@ -119,7 +174,6 @@ namespace Gameplay
 
             SpawnFallingPiece(deltaX, absDelta);
         }
-
 
         private void SpawnFallingPiece(float deltaX, float fallWidth)
         {

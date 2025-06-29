@@ -16,6 +16,8 @@ namespace Managers
         private const float ZStep = 2f;
         private const float XStep = 3f;
 
+        private MovingPlatform _lastSpawnedPlatform;
+
         public PlatformSpawner(DiContainer container, MovingPlatform platformPrefab, GameSettings gameSettings)
         {
             _container = container;
@@ -40,17 +42,20 @@ namespace Managers
             scale.x = _gameSettings.initialPlatformWidth / platform.GetComponent<BoxCollider>().size.x;
             platform.transform.localScale = scale;
 
+            platform.Initialize(spawnPos, moveRight: true);
+            platform.StopMoving();
+
             _lastPlatformPosition = spawnPos;
+            _lastSpawnedPlatform = platform;
+
             return platform;
         }
 
         public IPlatform SpawnNext(float width)
         {
             var clampedWidth = Mathf.Max(_gameSettings.minPlatformWidth, width);
-
             var newZ = _lastPlatformPosition.z + ZStep;
             var newX = _spawnRight ? XStep : -XStep;
-
             var spawnPos = new Vector3(newX, 0f, newZ);
 
             var platform = _container.InstantiatePrefabForComponent<MovingPlatform>(
@@ -64,11 +69,26 @@ namespace Managers
             scale.x = clampedWidth / platform.GetComponent<BoxCollider>().size.x;
             platform.transform.localScale = scale;
 
+            // Hareket yönü pozisyonun tersine olmalı
+            var moveRight = !_spawnRight;
+            platform.Initialize(spawnPos, moveRight);
+            platform.StartMoving();
+
+            platform.SetTargetPlatform(_lastSpawnedPlatform);
+
+            platform.OnFall += () =>
+            {
+                Debug.Log("Platform düştü! Oyuncu kaybetti.");
+                // Oyun bitti fonksiyonu burada çağrılabilir
+            };
+
             _lastPlatformPosition = spawnPos;
+            _lastSpawnedPlatform = platform;
             _spawnRight = !_spawnRight;
 
             return platform;
         }
+
 
         public void SetStartPosition(Vector3 start)
         {

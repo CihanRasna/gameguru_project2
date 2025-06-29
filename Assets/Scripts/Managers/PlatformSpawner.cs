@@ -15,6 +15,8 @@ namespace Managers
         private Vector3 _lastPlatformPosition;
         private bool _spawnRight = true;
         private bool _canSpawn = true;
+        private int _spawnedPlatformsCount = 0;
+        private int _maxPlatformsForCurrentLevel = 0;
 
         public float ZStep { get; set; } = 2f;
         public float XStep { get; set; } = 3f;
@@ -63,6 +65,8 @@ namespace Managers
         {
             if (!_canSpawn) return null;
             
+            if (_spawnedPlatformsCount >= _maxPlatformsForCurrentLevel) return null;
+            
             var clampedWidth = Mathf.Max(_gameSettings.minPlatformWidth, width);
             var newZ = _lastPlatformPosition.z + ZStep;
             var newX = _spawnRight ? XStep : -XStep;
@@ -90,14 +94,16 @@ namespace Managers
             _lastPlatformPosition = spawnPos;
             _lastSpawnedPlatform = platform;
             _spawnRight = !_spawnRight;
+            _spawnedPlatformsCount += 1;
 
             return platform;
         }
 
 
-        public void SetStartPosition(Vector3 start)
+        public void SetStartPosition(Vector3 start, int platformsCount)
         {
             _lastPlatformPosition = start;
+            _maxPlatformsForCurrentLevel = platformsCount;
         }
     }
 }

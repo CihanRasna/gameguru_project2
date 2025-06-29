@@ -28,8 +28,14 @@ namespace Managers
         }
 
         [Inject]
-        public GameManager(ICharacter character, IPlatformSpawner spawner, IAudioManager audioManager,
-            GameSettings gameSettings, InputHandler inputHandler, FinishPlatform finishPrefab, DiContainer container)
+        public GameManager(
+            ICharacter character,
+            IPlatformSpawner spawner,
+            IAudioManager audioManager,
+            GameSettings gameSettings,
+            InputHandler inputHandler,
+            FinishPlatform finishPrefab,
+            DiContainer container)
         {
             _character = character;
             _spawner = spawner;
@@ -40,14 +46,17 @@ namespace Managers
             _container = container;
 
             GameState = GameState.Start;
+
+            _spawner.SetStartPosition(Vector3.zero, _gameSettings.GetStepCountForLevel(CurrentLevel));
+
             _lastPlatform = spawner.SpawnInitial();
             var newWidth = _lastPlatform.GetWidth();
             _currentPlatform = spawner.SpawnNext(newWidth);
-            _currentPlatform.StartMoving();
+            _currentPlatform?.StartMoving();
 
             SpawnFinishPlatformForLevel(CurrentLevel);
 
-            character.SetTargetPosition(_lastPlatform.GetPosition());
+            _character.SetTargetPosition(_lastPlatform.GetPosition());
         }
 
         [Inject]
@@ -102,8 +111,7 @@ namespace Managers
                 beginPosZ = _currentFinish.transform.position.z;
             }
             var zOffset = stepCount * zStep + beginPosZ;
-
-            // Prefab'ı instantiate et, konumunu ayarla
+            
             _currentFinish = _container.InstantiatePrefabForComponent<FinishPlatform>(
                 _finishPrefab,
                 new Vector3(0f, 0f, zOffset),
@@ -136,9 +144,12 @@ namespace Managers
 
         public void NextLevel()
         {
-            _spawner.SetStartPosition(_currentFinish.transform.position);
-
+            _spawner.SetStartPosition(_currentFinish.transform.position,_gameSettings.GetStepCountForLevel(CurrentLevel));
             SpawnFinishPlatformForLevel(CurrentLevel);
+            var newWidth = _gameSettings.initialPlatformWidth;
+            _currentPlatform = _spawner.SpawnNext(newWidth);
+            _currentPlatform.StartMoving();
+            _character.SetTargetPosition(_lastPlatform.GetPosition());
         }
     }
 }

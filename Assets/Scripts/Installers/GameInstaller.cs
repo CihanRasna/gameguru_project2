@@ -16,6 +16,7 @@ namespace Installers
 
         public override void InstallBindings()
         {
+            Container.Bind<MovingPlatform>().FromInstance(platformPrefab).AsSingle(); 
             Container.Bind<ICharacter>().FromInstance(characterInScene).AsSingle();
             Container.Bind<InputHandler>().FromComponentInHierarchy().AsSingle();
 
@@ -27,7 +28,8 @@ namespace Installers
             Container.Bind<IAudioManager>().To<AudioManager>().AsSingle();
             
             // Spawner bind
-            Container.Bind<IPlatformSpawner>().To<PlatformSpawner>().AsSingle().WithArguments(platformPrefab);
+            Container.Bind<IPlatformSpawner>().To<PlatformSpawner>().AsSingle();
+            
 
             // GameManager
             Container.Bind<FinishPlatform>().FromInstance(finishPlatformPrefab).AsSingle();

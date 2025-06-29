@@ -36,7 +36,7 @@ namespace Gameplay
     {
         IPlatform SpawnInitial();
         public IPlatform SpawnNext(float width);
-        void SetStartPosition(Vector3 start);
+        void SetStartPosition(Vector3 start, int platformsCount);
         void DisableSpawning();
         event Action OnPlatformMissed;
     }

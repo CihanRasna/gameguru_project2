@@ -68,8 +68,7 @@ namespace Managers
             var scale = platform.transform.localScale;
             scale.x = clampedWidth / platform.GetComponent<BoxCollider>().size.x;
             platform.transform.localScale = scale;
-
-            // Hareket yönü pozisyonun tersine olmalı
+            
             var moveRight = !_spawnRight;
             platform.Initialize(spawnPos, moveRight);
             platform.StartMoving();
@@ -78,8 +77,8 @@ namespace Managers
 
             platform.OnFall += () =>
             {
-                Debug.Log("Platform düştü! Oyuncu kaybetti.");
-                // Oyun bitti fonksiyonu burada çağrılabilir
+                Debug.Log("game lost");
+                // TODO: game end
             };
 
             _lastPlatformPosition = spawnPos;

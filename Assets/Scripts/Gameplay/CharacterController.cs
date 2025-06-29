@@ -1,34 +1,69 @@
 using UnityEngine;
-using System.Collections;
+using Zenject;
 
 namespace Gameplay
 {
     public class CharacterController : MonoBehaviour, ICharacter
     {
-        public float moveSpeed = 5f;
-        [SerializeField] private Animator characterAnimator;
-        
+        [Inject] private GameSettings _gameSettings;
 
-        public void MoveTo(Vector3 targetPosition)
+        private Rigidbody _rigidbody;
+        private Vector3 _targetPosition;
+        private bool _isFalling = false;
+
+        private float _baseSpeed;
+        private float _speedMultiplier = 1f;
+
+        private void Awake()
         {
-            StopAllCoroutines();
-            StartCoroutine(MoveToRoutine(targetPosition));
+            _rigidbody = GetComponent<Rigidbody>();
+            if (_rigidbody == null)
+                _rigidbody = gameObject.AddComponent<Rigidbody>();
+
+            _rigidbody.isKinematic = true;
+            _targetPosition = transform.position;
+
+            _baseSpeed = _gameSettings.characterMoveSpeed;
         }
 
-        private IEnumerator MoveToRoutine(Vector3 target)
+        private void Update()
         {
-            var start = transform.position;
-            var elapsed = 0f;
-            var duration = 0.5f;
+            if (_isFalling) return;
 
-            while (elapsed < duration)
+            var position = transform.position;
+            var distance = Vector3.Distance(transform.position, _targetPosition);
+
+            if (distance < 0.1f)
             {
-                transform.position = Vector3.Lerp(start, target, elapsed / duration);
-                elapsed += Time.deltaTime;
-                yield return null;
+                transform.position = _targetPosition;
             }
+            else
+            {
+                var speed = _baseSpeed * _speedMultiplier;
+                transform.position = Vector3.MoveTowards(position, _targetPosition, speed * Time.deltaTime);
+            }
+        }
 
-            transform.position = target;
+        public void SetTargetPosition(Vector3 target)
+        {
+            _targetPosition = target;
+        }
+
+        public void SetSpeedMultiplier(float comboMultiplier)
+        {
+            var speedMultiplier = 1f + 0.1f * comboMultiplier;
+            _speedMultiplier = speedMultiplier;
+        }
+
+        public void ResetSpeedMultiplier()
+        {
+            _speedMultiplier = 1f;
+        }
+
+        public void Fall()
+        {
+            _isFalling = true;
+            _rigidbody.isKinematic = false;
         }
     }
 }

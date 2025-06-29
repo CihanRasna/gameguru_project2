@@ -9,7 +9,6 @@ namespace Managers
         private readonly IPlatformSpawner _spawner;
         private readonly IAudioManager _audioManager;
 
-
         private IPlatform _lastPlatform;
         private IPlatform _currentPlatform;
         private readonly GameSettings _gameSettings;
@@ -28,7 +27,7 @@ namespace Managers
             _currentPlatform = spawner.SpawnNext(newWidth);
             _currentPlatform.StartMoving();
 
-            character.MoveTo(_lastPlatform.GetPosition());
+            character.SetTargetPosition(_lastPlatform.GetPosition());
         }
 
         public void OnPlayerTap()
@@ -44,16 +43,18 @@ namespace Managers
                 _perfectCombo += 1;
                 _audioManager.PlayNote(_perfectCombo);
                 _currentPlatform.MatchPerfect();
+                _character.SetSpeedMultiplier(_perfectCombo);
             }
             else
             {
                 _perfectCombo = 0;
                 _audioManager.PlayFailure();
                 (_currentPlatform as MovingPlatform)?.CutPlatform(deltaX);
+                _character.ResetSpeedMultiplier();
             }
 
             var targetPos = new Vector3(_currentPlatform.GetPosition().x, 1f, _currentPlatform.GetPosition().z);
-            _character.MoveTo(targetPos);
+            _character.SetTargetPosition(targetPos);
 
             _lastPlatform = _currentPlatform;
             var newWidth = _lastPlatform.GetWidth();

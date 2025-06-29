@@ -103,7 +103,7 @@ namespace Gameplay
             IsMoving = false;
 
             if (!TryGetComponent<Rigidbody>(out var rb))
-                rb = gameObject.AddComponent<Rigidbody>();
+                gameObject.AddComponent<Rigidbody>();
 
             OnFall?.Invoke();
         }
@@ -172,7 +172,7 @@ namespace Gameplay
 
             if (overlap <= 0f)
             {
-                Debug.Log("Tamamen dışta, platform düşmeli!");
+                Debug.Log("platfom out! fail");
                 Fall();
                 return;
             }

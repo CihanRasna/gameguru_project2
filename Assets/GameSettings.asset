@@ -12,18 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f27069bf61e46a7835f531d4d11f0b1, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  perfectTolerance: 0.5
+  perfectTolerance: 0.1
   basePitch: 1
   pitchStepPerPerfect: 0.1
   maxPitch: 2
   initialPlatformWidth: 2
-  minPlatformWidth: 0.5
+  minPlatformWidth: 0.1
   moveSpeed: 2
   platformColors:
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0, g: 1, b: 0, a: 1}
-  - {r: 0, g: 0, b: 1, a: 1}
-  - {r: 1, g: 1, b: 0, a: 1}
-  - {r: 0, g: 1, b: 1, a: 1}
-  - {r: 1, g: 0, b: 1, a: 1}
-  - {r: 1, g: 1, b: 0, a: 1}
+  - {r: 0.9716981, g: 0.28875935, b: 0.28875935, a: 1}
+  - {r: 0.34709862, g: 0.9811321, b: 0.34709862, a: 1}
+  - {r: 0.34376112, g: 0.34376112, b: 0.9716981, a: 1}
+  - {r: 0.9716981, g: 0.9716981, b: 0.371262, a: 1}
+  - {r: 0.36561054, g: 0.9811321, b: 0.9811321, a: 1}
+  - {r: 0.9811321, g: 0.36561054, b: 0.9811321, a: 1}
+  - {r: 0.5, g: 0.19224104, b: 0.1721698, a: 1}
+  characterMoveSpeed: 1

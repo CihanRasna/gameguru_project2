@@ -20,6 +20,9 @@ namespace Gameplay
         
         [Header("Platform Colors")]
         public List<Color> platformColors;
+        
+        [Header("Character")]
+        public float characterMoveSpeed = 2f;
 
     }
 }

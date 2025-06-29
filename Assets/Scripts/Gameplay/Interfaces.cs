@@ -17,7 +17,9 @@ namespace Gameplay
 
     public interface ICharacter
     {
-        void MoveTo(Vector3 targetPosition);
+        void SetTargetPosition(Vector3 targetPosition);
+        void SetSpeedMultiplier(float multiplier);
+        void ResetSpeedMultiplier();
     }
 
     public interface IGameManager

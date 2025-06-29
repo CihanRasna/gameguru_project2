@@ -10,6 +10,7 @@ namespace Gameplay
         bool IsMoving { get; }
         void CutPlatform(float deltaX);
         float GetWidth();
+        void MoveTo(Vector3 position);
     }
 
 
@@ -22,7 +23,7 @@ namespace Gameplay
     {
         void OnPlayerTap();
     }
-    
+
     public interface IPlatformSpawner
     {
         IPlatform SpawnInitial();
@@ -30,6 +31,11 @@ namespace Gameplay
 
         void SetStartPosition(Vector3 start);
     }
-
+    
+    public interface IAudioManager
+    {
+        void PlayNote(int perfectCombo);
+        void PlayFailure();
+    }
 
 }

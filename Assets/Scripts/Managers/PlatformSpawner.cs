@@ -8,6 +8,7 @@ namespace Managers
     {
         private readonly DiContainer _container;
         private readonly MovingPlatform _platformPrefab;
+        private readonly GameSettings _gameSettings;
 
         private Vector3 _lastPlatformPosition;
         private bool _spawnRight = true;
@@ -15,16 +16,19 @@ namespace Managers
         private const float ZStep = 2f;
         private const float XStep = 3f;
 
-        public PlatformSpawner(DiContainer container, MovingPlatform platformPrefab)
+        public PlatformSpawner(DiContainer container, MovingPlatform platformPrefab, GameSettings gameSettings)
         {
             _container = container;
             _platformPrefab = platformPrefab;
+            _gameSettings = gameSettings;
+
             _lastPlatformPosition = Vector3.zero;
         }
 
         public IPlatform SpawnInitial()
         {
-            var spawnPos = new Vector3(0f, 0f, 0f);
+            var spawnPos = Vector3.zero;
+
             var platform = _container.InstantiatePrefabForComponent<MovingPlatform>(
                 _platformPrefab,
                 spawnPos,
@@ -32,12 +36,18 @@ namespace Managers
                 null
             );
 
+            var scale = platform.transform.localScale;
+            scale.x = _gameSettings.initialPlatformWidth / platform.GetComponent<BoxCollider>().size.x;
+            platform.transform.localScale = scale;
+
             _lastPlatformPosition = spawnPos;
             return platform;
         }
 
         public IPlatform SpawnNext(float width)
         {
+            var clampedWidth = Mathf.Max(_gameSettings.minPlatformWidth, width);
+
             var newZ = _lastPlatformPosition.z + ZStep;
             var newX = _spawnRight ? XStep : -XStep;
 
@@ -51,7 +61,7 @@ namespace Managers
             );
 
             var scale = platform.transform.localScale;
-            scale.x = width;
+            scale.x = clampedWidth / platform.GetComponent<BoxCollider>().size.x;
             platform.transform.localScale = scale;
 
             _lastPlatformPosition = spawnPos;
@@ -59,7 +69,6 @@ namespace Managers
 
             return platform;
         }
-
 
         public void SetStartPosition(Vector3 start)
         {

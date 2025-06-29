@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -262,7 +262,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -420,7 +420,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823, type: 2}
+  sharedProfile: {fileID: 0}
 --- !u!4 &832575519
 Transform:
   m_ObjectHideFlags: 0
@@ -465,8 +465,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 776d93ae97524808bb93dfe7930968dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platformPrefab: {fileID: 199055800753380928, guid: 5a2215dac404c5545950df72ecbb778a,
-    type: 3}
+  gameSettings: {fileID: 11400000, guid: d2ba60a896e658341b09a29fd344faf3, type: 2}
+  platformPrefab: {fileID: 199055800753380928, guid: 5a2215dac404c5545950df72ecbb778a, type: 3}
   characterInScene: {fileID: 1125772534}
   noteClip: {fileID: 8300000, guid: 34c638d8d99ccfd44a261f13505ab317, type: 3}
 --- !u!4 &866146567
@@ -563,8 +563,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1125772534 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4171752732825285561, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 4171752732825285561, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
   m_PrefabInstance: {fileID: 1137282292}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -575,8 +574,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
 --- !u!4 &1125772535 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
   m_PrefabInstance: {fileID: 1137282292}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1137282292
@@ -586,63 +584,51 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 948255574}
     m_Modifications:
-    - target: {fileID: 2592478029874866565, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-        type: 3}
+    - target: {fileID: 2592478029874866565, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
       propertyPath: m_Name
       value: Character
       objectReference: {fileID: 0}
-    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-        type: 3}
+    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-        type: 3}
+    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.672078
       objectReference: {fileID: 0}
-    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-        type: 3}
+    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
       propertyPath: m_LocalPosition.y
       value: 3.128159
       objectReference: {fileID: 0}
-    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-        type: 3}
+    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
       propertyPath: m_LocalPosition.z
       value: -4.5389957
       objectReference: {fileID: 0}
-    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-        type: 3}
+    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-        type: 3}
+    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-        type: 3}
+    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-        type: 3}
+    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-        type: 3}
+    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-        type: 3}
+    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a,
-        type: 3}
+    - target: {fileID: 3583408000729498884, guid: 2a791076cc1cca6429f8ba3dbd582d3a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
@@ -677,7 +663,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scriptableObjectInstallers: []
+  _scriptableObjectInstallers:
+  - {fileID: 0}
   _monoInstallers:
   - {fileID: 866146566}
   _installerPrefabs: []

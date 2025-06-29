@@ -1,16 +1,23 @@
 using UnityEngine;
+using Zenject;
 
 namespace Gameplay
 {
     public class MovingPlatform : MonoBehaviour, IPlatform
     {
-        public float moveSpeed = 2f;
+        public float MoveSpeed => gameSettings.moveSpeed;
         public float movementRange = 2.5f;
         private int _direction = 1;
         [SerializeField] private BoxCollider boxCollider;
-
-
         public bool IsMoving { get; private set; } = false;
+        
+        private GameSettings gameSettings;
+
+        [Inject]
+        public void Construct(GameSettings settings)
+        {
+            gameSettings = settings;
+        }
 
         private void Start()
         {
@@ -33,7 +40,7 @@ namespace Gameplay
         {
             if (!IsMoving) return;
 
-            transform.position += Vector3.right * (_direction * moveSpeed * Time.deltaTime);
+            transform.position += Vector3.right * (_direction * MoveSpeed * Time.deltaTime);
 
             var x = transform.position.x;
             if (x < -movementRange || x > movementRange)
@@ -42,6 +49,11 @@ namespace Gameplay
                 var clampedX = Mathf.Clamp(x, -movementRange, movementRange);
                 transform.position = new Vector3(clampedX, transform.position.y, transform.position.z);
             }
+        }
+
+        public void MoveTo(Vector3 position)
+        {
+            transform.position = position;
         }
 
         public float GetWidth() => boxCollider.size.x * transform.localScale.x;

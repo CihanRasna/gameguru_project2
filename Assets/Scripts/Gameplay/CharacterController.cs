@@ -6,6 +6,8 @@ namespace Gameplay
     public class CharacterController : MonoBehaviour, ICharacter
     {
         public float moveSpeed = 5f;
+        [SerializeField] private Animator characterAnimator;
+        
 
         public void MoveTo(Vector3 targetPosition)
         {

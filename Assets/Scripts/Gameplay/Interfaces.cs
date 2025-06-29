@@ -11,6 +11,7 @@ namespace Gameplay
         void CutPlatform(float deltaX);
         float GetWidth();
         void MoveTo(Vector3 position);
+        void MatchPerfect();
     }
 
 

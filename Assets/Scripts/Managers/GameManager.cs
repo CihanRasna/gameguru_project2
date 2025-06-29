@@ -43,6 +43,7 @@ namespace Managers
             {
                 _perfectCombo += 1;
                 _audioManager.PlayNote(_perfectCombo);
+                _currentPlatform.MatchPerfect();
             }
             else
             {

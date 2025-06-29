@@ -1,6 +1,7 @@
 using UnityEngine;
 using Zenject;
 using System;
+using DG.Tweening;
 using Random = UnityEngine.Random;
 
 namespace Gameplay
@@ -143,6 +144,20 @@ namespace Gameplay
         public void MoveTo(Vector3 position)
         {
             transform.position = position;
+        }
+
+        public void MatchPerfect()
+        {
+            transform.DOMoveX(_targetPlatform.GetPosition().x, 0.1f);
+            PunchScale();
+        }
+
+        public void PunchScale()
+        {
+            transform.DOPunchScale(Vector3.one * 0.33f, 0.05f).OnComplete((() =>
+            {
+                (_targetPlatform as MovingPlatform)?.PunchScale();
+            }));
         }
 
         public float GetWidth() => boxCollider.size.x * transform.localScale.x;

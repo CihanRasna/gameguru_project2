@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Gameplay
@@ -23,6 +24,22 @@ namespace Gameplay
         
         [Header("Character")]
         public float characterMoveSpeed = 2f;
+        
+        [Header("Level Data")]
+        public List<LevelDistance> levelDistances;
 
+        public int GetStepCountForLevel(int level)
+        {
+            var entry = levelDistances.FirstOrDefault(ld => ld.level == level);
+            return entry?.stepCount ?? 20;
+        }
+
+    }
+    
+    [System.Serializable]
+    public class LevelDistance
+    {
+        public int level;
+        public int stepCount;
     }
 }

@@ -59,8 +59,8 @@ namespace Gameplay
         {
             _speedMultiplier = 1f;
         }
-
-        public void Fall()
+        
+        public void StopMoving()
         {
             _isFalling = true;
             _rigidbody.isKinematic = false;

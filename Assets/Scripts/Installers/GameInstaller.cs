@@ -12,10 +12,12 @@ namespace Installers
         public MovingPlatform platformPrefab;
         public CharacterController characterInScene;
         public AudioClip noteClip;
+        public FinishPlatform finishPlatformPrefab;
 
         public override void InstallBindings()
         {
             Container.Bind<ICharacter>().FromInstance(characterInScene).AsSingle();
+            Container.Bind<InputHandler>().FromComponentInHierarchy().AsSingle();
 
             //audio
             var audioGo = new GameObject("NoteAudio");
@@ -23,13 +25,14 @@ namespace Installers
             Container.Bind<AudioClip>().FromInstance(noteClip).AsSingle();
             Container.Bind<AudioSource>().FromInstance(audioSource).AsSingle();
             Container.Bind<IAudioManager>().To<AudioManager>().AsSingle();
-
+            
             // Spawner bind
             Container.Bind<IPlatformSpawner>().To<PlatformSpawner>().AsSingle().WithArguments(platformPrefab);
 
             // GameManager
-            Container.Bind<IGameManager>().To<GameManager>().AsSingle();
+            Container.Bind<FinishPlatform>().FromInstance(finishPlatformPrefab).AsSingle();
             Container.BindInstance(gameSettings).AsSingle();
+            Container.Bind<IGameManager>().To<GameManager>().AsSingle();
         }
     }
 }

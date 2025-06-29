@@ -1,3 +1,4 @@
+using System;
 using Gameplay;
 using UnityEngine;
 using Zenject;
@@ -6,15 +7,17 @@ namespace Managers
 {
     public class PlatformSpawner : IPlatformSpawner
     {
+        public event Action OnPlatformMissed;
         private readonly DiContainer _container;
         private readonly MovingPlatform _platformPrefab;
         private readonly GameSettings _gameSettings;
 
         private Vector3 _lastPlatformPosition;
         private bool _spawnRight = true;
+        private bool _canSpawn = true;
 
-        private const float ZStep = 2f;
-        private const float XStep = 3f;
+        public float ZStep { get; set; } = 2f;
+        public float XStep { get; set; } = 3f;
 
         private MovingPlatform _lastSpawnedPlatform;
 
@@ -26,7 +29,12 @@ namespace Managers
 
             _lastPlatformPosition = Vector3.zero;
         }
-
+        
+        public void DisableSpawning()
+        {
+            _canSpawn = false;
+        }
+        
         public IPlatform SpawnInitial()
         {
             var spawnPos = Vector3.zero;
@@ -53,6 +61,8 @@ namespace Managers
 
         public IPlatform SpawnNext(float width)
         {
+            if (!_canSpawn) return null;
+            
             var clampedWidth = Mathf.Max(_gameSettings.minPlatformWidth, width);
             var newZ = _lastPlatformPosition.z + ZStep;
             var newX = _spawnRight ? XStep : -XStep;
@@ -75,11 +85,7 @@ namespace Managers
 
             platform.SetTargetPlatform(_lastSpawnedPlatform);
 
-            platform.OnFall += () =>
-            {
-                Debug.Log("game lost");
-                // TODO: game end
-            };
+            platform.OnFall += () => OnPlatformMissed?.Invoke(); 
 
             _lastPlatformPosition = spawnPos;
             _lastSpawnedPlatform = platform;

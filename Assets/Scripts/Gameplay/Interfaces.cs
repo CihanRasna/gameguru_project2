@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Gameplay
@@ -20,19 +21,24 @@ namespace Gameplay
         void SetTargetPosition(Vector3 targetPosition);
         void SetSpeedMultiplier(float multiplier);
         void ResetSpeedMultiplier();
+        void StopMoving();
     }
 
     public interface IGameManager
     {
         void OnPlayerTap();
+        void LevelComplete();
+        void GameOver();
+        GameState GameState { get; }
     }
 
     public interface IPlatformSpawner
     {
         IPlatform SpawnInitial();
         public IPlatform SpawnNext(float width);
-
         void SetStartPosition(Vector3 start);
+        void DisableSpawning();
+        event Action OnPlatformMissed;
     }
     
     public interface IAudioManager

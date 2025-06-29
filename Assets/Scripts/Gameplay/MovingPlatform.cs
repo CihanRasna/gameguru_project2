@@ -8,13 +8,14 @@ namespace Gameplay
 {
     public class MovingPlatform : MonoBehaviour, IPlatform
     {
-        public float MoveSpeed => _gameSettings.moveSpeed;
-        public float movementRange = 10f;
-        private int _direction;
         [SerializeField] private BoxCollider boxCollider;
+        
         private Renderer _rend;
         private MaterialPropertyBlock _propBlock;
         private Color _currentColor;
+        public float MoveSpeed => _gameSettings.moveSpeed;
+        private int _direction;
+        
         public bool IsMoving { get; private set; } = false;
 
         private GameSettings _gameSettings;
@@ -60,11 +61,11 @@ namespace Gameplay
         {
             if (!IsMoving) return;
 
-            float previousX = transform.position.x;
+            var previousX = transform.position.x;
 
             transform.position += Vector3.right * (_direction * MoveSpeed * Time.deltaTime);
 
-            float currentX = transform.position.x;
+            var currentX = transform.position.x;
 
             if ((_direction > 0 && currentX > previousX) || (_direction < 0 && currentX < previousX))
             {
@@ -76,21 +77,19 @@ namespace Gameplay
         {
             if (_targetPlatform == null) return;
 
-            float baseX = _targetPlatform.GetPosition().x;
-            float baseHalf = _targetPlatform.GetWidth() / 2f;
+            var baseX = _targetPlatform.GetPosition().x;
+            var baseHalf = _targetPlatform.GetWidth() / 2f;
 
-            float myX = GetPosition().x;
-            float myHalf = GetWidth() / 2f;
+            var myX = GetPosition().x;
+            var myHalf = GetWidth() / 2f;
 
-            if (_direction > 0) // Sağ (pozitif) yönünde hareket
+            if (_direction > 0)
             {
-                // Eğer platformun sol ucu, hedef platformun sağ ucunu geçtiyse düş
                 if (myX - myHalf > baseX + baseHalf)
                     Fall();
             }
-            else if (_direction < 0) // Sol (negatif) yönünde hareket
+            else if (_direction < 0)
             {
-                // Eğer platformun sağ ucu, hedef platformun sol ucunu geçtiyse düş
                 if (myX + myHalf < baseX - baseHalf)
                     Fall();
             }
@@ -99,7 +98,6 @@ namespace Gameplay
 
         public void Fall()
         {
-            Debug.Log("⬇ Platform kaçtı, düşüyor.");
             IsMoving = false;
 
             if (!TryGetComponent<Rigidbody>(out var rb))
@@ -121,11 +119,8 @@ namespace Gameplay
         {
             _currentColor = color;
 
-            if (_rend == null)
-                _rend = GetComponent<Renderer>();
-
-            if (_propBlock == null)
-                _propBlock = new MaterialPropertyBlock();
+            _rend ??= GetComponent<Renderer>();
+            _propBlock ??= new MaterialPropertyBlock();
 
             _rend.GetPropertyBlock(_propBlock);
             _propBlock.SetColor("_BaseColor", _currentColor);
@@ -177,10 +172,8 @@ namespace Gameplay
                 return;
             }
 
-            var newWidth = overlap;
-
             var newScale = transform.localScale;
-            newScale.x = newWidth / boxCollider.size.x;
+            newScale.x = overlap / boxCollider.size.x;
             transform.localScale = newScale;
 
             var newPos = transform.position;

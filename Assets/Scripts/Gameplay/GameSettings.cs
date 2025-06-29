@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay
@@ -16,5 +17,9 @@ namespace Gameplay
         public float initialPlatformWidth = 3f;
         public float minPlatformWidth = 0.5f;
         public float moveSpeed = 2f;
+        
+        [Header("Platform Colors")]
+        public List<Color> platformColors;
+
     }
 }

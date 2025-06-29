@@ -5,18 +5,21 @@ namespace Gameplay
 {
     public class MovingPlatform : MonoBehaviour, IPlatform
     {
-        public float MoveSpeed => gameSettings.moveSpeed;
+        public float MoveSpeed => _gameSettings.moveSpeed;
         public float movementRange = 2.5f;
         private int _direction = 1;
         [SerializeField] private BoxCollider boxCollider;
+        private Renderer _rend;
+        private MaterialPropertyBlock _propBlock;
+        private Color _currentColor;
         public bool IsMoving { get; private set; } = false;
-        
-        private GameSettings gameSettings;
+
+        private GameSettings _gameSettings;
 
         [Inject]
         public void Construct(GameSettings settings)
         {
-            gameSettings = settings;
+            _gameSettings = settings;
         }
 
         private void Start()
@@ -24,6 +27,7 @@ namespace Gameplay
             var pos = transform.position;
             pos.x = 0f;
             transform.position = pos;
+            SetColor(GetRandomColor());
         }
 
         public void StartMoving()
@@ -50,6 +54,36 @@ namespace Gameplay
                 transform.position = new Vector3(clampedX, transform.position.y, transform.position.z);
             }
         }
+
+        private Color GetRandomColor()
+        {
+            if (_gameSettings.platformColors == null || _gameSettings.platformColors.Count == 0)
+                return Color.white;
+
+            var index = Random.Range(0, _gameSettings.platformColors.Count);
+            return _gameSettings.platformColors[index];
+        }
+
+        private void SetColor(Color color)
+        {
+            if (!TryGetComponent(out Renderer myRenderer)) return;
+            _currentColor = color;
+            _rend = myRenderer;
+            _propBlock ??= new MaterialPropertyBlock();
+            _rend.GetPropertyBlock(_propBlock);
+            _propBlock.SetColor("_BaseColor", _currentColor);
+            _rend.SetPropertyBlock(_propBlock);
+        }
+
+        private void SetColorToPart(GameObject part, Color color)
+        {
+            if (!part.TryGetComponent(out Renderer partRenderer)) return;
+            var pb = new MaterialPropertyBlock();
+            partRenderer.GetPropertyBlock(pb);
+            pb.SetColor("_BaseColor", color);
+            partRenderer.SetPropertyBlock(pb);
+        }
+
 
         public void MoveTo(Vector3 position)
         {
@@ -102,6 +136,7 @@ namespace Gameplay
 
             fallingPart.transform.position = partPos;
             fallingPart.AddComponent<Rigidbody>();
+            SetColorToPart(fallingPart, _currentColor);
 
             Destroy(fallingPart, 3f);
         }

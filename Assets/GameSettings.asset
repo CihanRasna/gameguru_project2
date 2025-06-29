@@ -16,6 +16,14 @@ MonoBehaviour:
   basePitch: 1
   pitchStepPerPerfect: 0.1
   maxPitch: 2
-  initialPlatformWidth: 3
+  initialPlatformWidth: 2
   minPlatformWidth: 0.5
   moveSpeed: 2
+  platformColors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  - {r: 1, g: 1, b: 0, a: 1}
+  - {r: 0, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0, b: 1, a: 1}
+  - {r: 1, g: 1, b: 0, a: 1}

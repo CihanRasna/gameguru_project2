@@ -53,12 +53,13 @@ namespace Managers
 
             GameState = GameState.Start;
 
-            _spawner.SetStartPosition(Vector3.zero, _gameSettings.GetStepCountForLevel(CurrentLevel));
+            var stepCount = gameSettings.GetStepCountForLevel(CurrentLevel);
+            _spawner.SetStartPosition(Vector3.zero, stepCount);
             _lastPlatform = _spawner.SpawnInitial();
             var newWidth = _lastPlatform.GetWidth();
             _currentPlatform = _spawner.SpawnNext(newWidth);
             _currentPlatform.StopMoving();
-            SpawnFinishPlatformForLevel(CurrentLevel);
+            SpawnFinishPlatformForLevel(stepCount);
         }
 
         [Inject]
@@ -116,9 +117,10 @@ namespace Managers
             _currentPlatform?.StartMoving();
         }
         
-        private void SpawnFinishPlatformForLevel(int level)
+        private void SpawnFinishPlatformForLevel(int stepCount)
         {
-            var stepCount = _gameSettings.GetStepCountForLevel(level) + 1;
+            Debug.Log(stepCount);
+            Debug.Log(_lastPlatform.GetPosition());
             _currentFinish = (_spawner as PlatformSpawner)?.SpawnFinishPlatform(_lastPlatform.GetPosition(), stepCount);
 
             if (_currentFinish != null)
@@ -153,13 +155,14 @@ namespace Managers
         public void NextLevel()
         {
             GameState = GameState.Start;
+            var stepCount = _gameSettings.GetStepCountForLevel(CurrentLevel);
             _uiManager.UpdateLevelText();
-            _spawner.SetStartPosition(_currentFinish.transform.position,_gameSettings.GetStepCountForLevel(CurrentLevel));
+            _spawner.SetStartPosition(_currentFinish.transform.position,stepCount);
             var newWidth = _gameSettings.initialPlatformWidth;
             _lastPlatform = _currentFinish;
             _currentPlatform = _spawner.SpawnNext(newWidth);
             _currentPlatform.StopMoving();
-            SpawnFinishPlatformForLevel(CurrentLevel);
+            SpawnFinishPlatformForLevel(stepCount);
             _character.SetTargetPosition(_lastPlatform.GetPosition());
             _character.GetReadyForNextLevel();
             _cameraManager.LevelStartCamTransition();

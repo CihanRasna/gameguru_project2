@@ -114,6 +114,7 @@ namespace Managers
         
         public FinishPlatform SpawnFinishPlatform(Vector3 startPosition, int stepCount)
         {
+            stepCount += 1;
             var zOffset = ZStep * stepCount + startPosition.z;
 
             var finish = _container.InstantiatePrefabForComponent<FinishPlatform>(

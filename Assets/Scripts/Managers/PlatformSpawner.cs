@@ -183,8 +183,8 @@ namespace Managers
 
             foreach (var platform in temp)
             {
-                platform.FallOnFail();
                 _spawnedPlatforms.Remove(platform);
+                platform.FallOnFail();
             }
         }
 

@@ -31,8 +31,8 @@ MonoBehaviour:
   - {r: 0.5, g: 0.19224104, b: 0.1721698, a: 1}
   characterMoveSpeed: 1.5
   characterMaxSpeed: 3
-  characterDistanceThreshold: 3
-  characterRotationSpeed: 5
+  characterDistanceThreshold: 2
+  characterRotationSpeed: 15
   levelDistances:
   - level: 0
     stepCount: 3

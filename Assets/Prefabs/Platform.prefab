@@ -47,7 +47,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a165bd63739456ab85459a6ac68e09d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementRange: 2.5
   boxCollider: {fileID: 8495721787995281916}
 --- !u!33 &888986162176388248
 MeshFilter:
@@ -90,7 +89,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 32bd60527214dfe428def64279f44dda, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

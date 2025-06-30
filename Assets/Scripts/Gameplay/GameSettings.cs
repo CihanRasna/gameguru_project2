@@ -31,9 +31,13 @@ namespace Gameplay
 
         public int GetStepCountForLevel(int level)
         {
-            var entry = levelDistances.FirstOrDefault(ld => ld.level == level);
-            return entry?.stepCount ?? levelDistances[Random.Range(0, levelDistances.Count)].stepCount;
+            if (levelDistances == null || levelDistances.Count == 0)
+                return 0;
+
+            var index = level % levelDistances.Count;
+            return levelDistances[index].stepCount;
         }
+
     }
 
     [System.Serializable]

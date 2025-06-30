@@ -22,6 +22,7 @@ namespace Gameplay
         void SetSpeedMultiplier(float multiplier);
         void ResetSpeedMultiplier();
         void StopMoving();
+        void CelebrateSuccess();
     }
 
     public interface IGameManager
@@ -31,6 +32,7 @@ namespace Gameplay
         void GameOver();
         void NextLevel();
         GameState GameState { get; }
+        int CurrentLevel { get; }
     }
 
     public interface IPlatformSpawner

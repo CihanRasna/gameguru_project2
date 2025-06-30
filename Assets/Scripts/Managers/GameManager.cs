@@ -6,7 +6,6 @@ namespace Managers
 {
     public class GameManager : IGameManager
     {
-        [SerializeField] private Animator cameraAnimator; 
         private readonly FinishPlatform _finishPrefab;
         private readonly ICharacter _character;
         private readonly IPlatformSpawner _spawner;
@@ -156,7 +155,7 @@ namespace Managers
 
             GameState = GameState.Success;
 
-            _character.StopMoving();
+            _character.CelebrateSuccess();
             CurrentLevel += 1;
             _cameraManager.LevelCompleteCamTransition();
             _uiManager.ShowWinPanelDelayed(3f);
@@ -165,6 +164,7 @@ namespace Managers
 
         public void NextLevel()
         {
+            _uiManager.UpdateLevelText();
             _spawner.SetStartPosition(_currentFinish.transform.position,_gameSettings.GetStepCountForLevel(CurrentLevel));
             SpawnFinishPlatformForLevel(CurrentLevel);
             var newWidth = _gameSettings.initialPlatformWidth;

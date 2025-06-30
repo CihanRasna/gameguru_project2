@@ -7,22 +7,26 @@ namespace Gameplay
     {
         [Inject] private GameSettings _gameSettings;
 
+        private Animator _animator;
         private Rigidbody _rigidbody;
         private Vector3 _targetPosition;
-        private bool _isFalling = false;
+        private bool _isFalling;
+        private bool _isSucceed;
 
         private float _baseSpeed;
         private float _speedMultiplier = 1f;
         private float _currentSpeed;
-
         private float _maxSpeed;
         private float _distanceThreshold;
+        
+        private static readonly int Success = Animator.StringToHash("Success");
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
             if (_rigidbody == null)
-                _rigidbody = gameObject.AddComponent<Rigidbody>();
+                _rigidbody ??= gameObject.AddComponent<Rigidbody>();
+            _animator = GetComponentInChildren<Animator>();
 
             _rigidbody.isKinematic = true;
             _targetPosition = transform.position;
@@ -36,7 +40,7 @@ namespace Gameplay
 
         private void Update()
         {
-            if (_isFalling) return;
+            if (_isFalling || _isSucceed) return;
 
             var position = transform.position;
             var distance = Vector3.Distance(position, _targetPosition);
@@ -82,6 +86,12 @@ namespace Gameplay
         {
             _isFalling = true;
             _rigidbody.isKinematic = false;
+        }
+
+        public void CelebrateSuccess()
+        {
+            _isSucceed = true;
+            _animator.SetTrigger(Success);
         }
     }
 }

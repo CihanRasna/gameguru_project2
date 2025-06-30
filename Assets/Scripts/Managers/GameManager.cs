@@ -6,12 +6,10 @@ namespace Managers
 {
     public class GameManager : IGameManager
     {
-        private readonly FinishPlatform _finishPrefab;
         private readonly ICharacter _character;
         private readonly IPlatformSpawner _spawner;
         private readonly IAudioManager _audioManager;
         private readonly GameSettings _gameSettings;
-        private readonly DiContainer _container;
         private readonly InputHandler _inputHandler;
         private readonly CameraManager _cameraManager;
         private readonly UIManager _uiManager;
@@ -21,7 +19,7 @@ namespace Managers
         private FinishPlatform _currentFinish;
         private float Tolerance => _gameSettings.perfectTolerance;
         private int _perfectCombo = 0;
-        public GameState GameState { get; private set; } = GameState.Start;
+        public GameState GameState { get; private set; }
 
         public int CurrentLevel
         {
@@ -46,8 +44,6 @@ namespace Managers
             _gameSettings = gameSettings;
             _audioManager = audioManager;
             _inputHandler = inputHandler;
-            _finishPrefab = finishPrefab;
-            _container = container;
             _uiManager = uiManager;
             _cameraManager = cameraManager;
 
@@ -164,7 +160,6 @@ namespace Managers
 
         public void LevelComplete()
         {
-            Debug.Log("LEVEL COMPLETE");
             if (GameState is not GameState.Success) return;
             GameState = GameState.Success;
             Debug.Log("LEVEL COMPLETE");
@@ -192,7 +187,7 @@ namespace Managers
             _cameraManager.LevelStartCamTransition();
         }
 
-        public void RebuildLevel()
+        private void RebuildLevel()
         {
             GameState = GameState.Start;
             var stepCount = _gameSettings.GetStepCountForLevel(CurrentLevel);

@@ -17,7 +17,7 @@ MonoBehaviour:
   pitchStepPerPerfect: 0.1
   maxPitch: 2
   initialPlatformWidth: 2
-  minPlatformWidth: 0.1
+  minPlatformWidth: 0.35
   moveSpeed: 3
   platformColors:
   - {r: 0.9716981, g: 0.28875935, b: 0.28875935, a: 1}
@@ -37,3 +37,13 @@ MonoBehaviour:
     stepCount: 4
   - level: 2
     stepCount: 5
+  - level: 2
+    stepCount: 5
+  - level: 3
+    stepCount: 7
+  - level: 4
+    stepCount: 11
+  - level: 5
+    stepCount: 9
+  - level: 6
+    stepCount: 15

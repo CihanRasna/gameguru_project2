@@ -10,7 +10,7 @@ namespace Gameplay
 
         private Animator _animator;
         private Rigidbody _rigidbody;
-        public Vector3 _targetPosition;
+        private Vector3 _targetPosition;
         private bool _isFalling;
         private bool _isSucceed;
 

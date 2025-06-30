@@ -103,9 +103,9 @@ namespace Gameplay
             {
                 rb = gameObject.AddComponent<Rigidbody>();
                 rb.isKinematic = false;
-                rb.AddExplosionForce(5f, transform.position, 5, 2f,ForceMode.Impulse);
+                rb.AddExplosionForce(5f, transform.position, 5, 2f, ForceMode.Impulse);
             }
-                
+
             DOVirtual.DelayedCall(2f, () => gameObject.SetActive(false));
         }
 
@@ -179,13 +179,6 @@ namespace Gameplay
             var absDelta = Mathf.Abs(deltaX);
             var overlap = originalWidth - absDelta;
 
-            if (overlap <= 0f)
-            {
-                Debug.Log("platfom out! fail");
-                Fall();
-                return;
-            }
-
             var newScale = transform.localScale;
             newScale.x = overlap / boxCollider.size.x;
             transform.localScale = newScale;
@@ -195,6 +188,13 @@ namespace Gameplay
             transform.position = newPos;
 
             SpawnFallingPiece(deltaX, absDelta);
+
+            if (overlap <= _gameSettings.minPlatformWidth)
+            {
+                Debug.Log("platfom out! fail");
+                FallOnFail();
+                OnFall?.Invoke();
+            }
         }
 
         private void SpawnFallingPiece(float deltaX, float fallWidth)

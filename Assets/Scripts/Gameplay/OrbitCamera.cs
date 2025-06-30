@@ -5,8 +5,10 @@ namespace Gameplay
 {
     public class OrbitCamera : MonoBehaviour
     {
-        public Transform target;
-        public float rotationSpeed = 10f;
+        [SerializeField] private Vector3 rotateOffset = new(0, -8, -10f);
+        [SerializeField] private float rotationSpeed = 10f;
+        private float _angle;
+        private Transform target;
 
         [Inject]
         public void Initialize(ICharacter character)
@@ -18,7 +20,10 @@ namespace Gameplay
         {
             if (target == null)
             {
+                _angle = 0f;
                 target = FindObjectOfType<CharacterController>().transform;
+                var offsetRotated = Quaternion.Euler(0, _angle, 0) * rotateOffset;
+                transform.position = target.position + offsetRotated;
             }
         }
 
@@ -26,7 +31,10 @@ namespace Gameplay
         {
             if (!target) return;
 
-            transform.RotateAround(target.position, Vector3.up, rotationSpeed * Time.deltaTime);
+            _angle += rotationSpeed * Time.deltaTime;
+
+            var offsetRotated = Quaternion.Euler(0, _angle, 0) * rotateOffset;
+            transform.position = target.position + offsetRotated;
         }
     }
 }

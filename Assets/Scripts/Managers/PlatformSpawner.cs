@@ -25,7 +25,7 @@ namespace Managers
         private int _maxPlatformsForCurrentLevel = 0;
 
         private readonly List<IPlatform> _spawnedPlatforms = new();
-        private const int MaxPlatformCount = 15;
+        private const int MaxPlatformCount = 30;
 
         public float ZStep { get; set; } = 2f;
         public float XStep { get; set; } = 3f;

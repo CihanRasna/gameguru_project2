@@ -2,12 +2,14 @@ using System.Collections;
 using Gameplay;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace Managers
 {
     public class UIManager : MonoBehaviour
     {
+        [SerializeField] private Button tapToStartButton;
         [SerializeField] private TMP_Text levelText;
         [SerializeField] private GameObject winPanel;
         [SerializeField] private GameObject failPanel;
@@ -54,12 +56,14 @@ namespace Managers
         {
             winPanel.SetActive(false);
             _gameManager.NextLevel();
+            tapToStartButton.gameObject.SetActive(true);
         }
         
         public void OnFailLevelButtonClicked()
         {
             failPanel.SetActive(false);
             (_gameManager as GameManager)?.RestartFromLastPlatform();
+            tapToStartButton.gameObject.SetActive(true);
         }
     }
 }

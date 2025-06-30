@@ -86,6 +86,19 @@ namespace Managers
             if (_currentPlatform is null or { IsMoving: false }) return;
 
             _currentPlatform.StopMoving();
+            
+            var edgeDistance = Mathf.Abs(_currentPlatform.GetPosition().x - _lastPlatform.GetPosition().x);
+            var halfCurrentWidth = _currentPlatform.GetWidth() / 2f;
+            var halfLastWidth = _lastPlatform.GetWidth() / 2f;
+            var maxPossibleOverlap = halfCurrentWidth + halfLastWidth;
+
+            if (edgeDistance > maxPossibleOverlap)
+            {
+               // _audioManager.PlayFailure();
+                (_currentPlatform as MovingPlatform)?.Fall();
+                GameOver();
+                return;
+            }
 
             var deltaX = _currentPlatform.GetPosition().x - _lastPlatform.GetPosition().x;
 
@@ -99,7 +112,7 @@ namespace Managers
             else
             {
                 _perfectCombo = 0;
-                _audioManager.PlayFailure();
+                //_audioManager.PlayFailure();
                 (_currentPlatform as MovingPlatform)?.CutPlatform(deltaX);
                 _character.ResetSpeedMultiplier();
             }

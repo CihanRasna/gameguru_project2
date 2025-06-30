@@ -22,7 +22,8 @@ namespace Managers
 
         public void UpdateLevelText()
         {
-            levelText.text = $"Level {_gameManager.CurrentLevel.ToString()}";
+            var level = _gameManager.CurrentLevel + 1;
+            levelText.text = $"Level {level.ToString()}";
         }
 
         public void ShowWinPanelDelayed(float delay)

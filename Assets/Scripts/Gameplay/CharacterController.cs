@@ -20,6 +20,7 @@ namespace Gameplay
         private float _distanceThreshold;
         
         private static readonly int Success = Animator.StringToHash("Success");
+        private static readonly int Play = Animator.StringToHash("Play");
 
         private void Awake()
         {
@@ -92,6 +93,13 @@ namespace Gameplay
         {
             _isSucceed = true;
             _animator.SetTrigger(Success);
+        }
+
+        public void GetReadyForNextLevel()
+        {
+            _isSucceed = false;
+            _isFalling = false;
+            _animator.SetTrigger(Play);
         }
     }
 }

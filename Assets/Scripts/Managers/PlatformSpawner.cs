@@ -32,19 +32,17 @@ namespace Managers
 
             _lastPlatformPosition = Vector3.zero;
         }
-        
+
         public void DisableSpawning()
         {
             _canSpawn = false;
         }
-        
-        public IPlatform SpawnInitial()
-        {
-            var spawnPos = Vector3.zero;
 
+        public IPlatform SpawnInitial(Vector3? spawnPos = null)
+        {
             var platform = _container.InstantiatePrefabForComponent<MovingPlatform>(
                 _platformPrefab,
-                spawnPos,
+                spawnPos.GetValueOrDefault(Vector3.zero),
                 Quaternion.identity,
                 null
             );
@@ -53,10 +51,10 @@ namespace Managers
             scale.x = _gameSettings.initialPlatformWidth / platform.GetComponent<BoxCollider>().size.x;
             platform.transform.localScale = scale;
 
-            platform.Initialize(spawnPos, moveRight: true);
+            platform.Initialize(spawnPos.GetValueOrDefault(Vector3.zero), moveRight: true);
             platform.StopMoving();
 
-            _lastPlatformPosition = spawnPos;
+            _lastPlatformPosition = spawnPos.GetValueOrDefault(Vector3.zero);
             _lastSpawnedPlatform = platform;
 
             return platform;
@@ -71,7 +69,7 @@ namespace Managers
                 LastPlatformPlaced?.Invoke();
                 return null;
             }
-            
+
             var clampedWidth = Mathf.Max(_gameSettings.minPlatformWidth, width);
             var newZ = _lastPlatformPosition.z + ZStep;
             var newX = _spawnRight ? XStep : -XStep;
@@ -87,14 +85,14 @@ namespace Managers
             var scale = platform.transform.localScale;
             scale.x = clampedWidth / platform.GetComponent<BoxCollider>().size.x;
             platform.transform.localScale = scale;
-            
+
             var moveRight = !_spawnRight;
             platform.Initialize(spawnPos, moveRight);
             platform.StartMoving();
 
             platform.SetTargetPlatform(_lastSpawnedPlatform);
 
-            platform.OnFall += () => OnPlatformMissed?.Invoke(); 
+            platform.OnFall += () => OnPlatformMissed?.Invoke();
 
             _lastPlatformPosition = spawnPos;
             _lastSpawnedPlatform = platform;
@@ -104,9 +102,9 @@ namespace Managers
             return platform;
         }
 
-
         public void SetStartPosition(Vector3 start, int platformsCount)
         {
+            _spawnedPlatformsCount = 0;
             _lastPlatformPosition = start;
             _maxPlatformsForCurrentLevel = platformsCount;
         }

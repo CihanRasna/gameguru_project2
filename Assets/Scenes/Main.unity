@@ -1939,6 +1939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51543e63d3ee4c5cbc9e8e29ec528a7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelText: {fileID: 417714246}
   winPanel: {fileID: 2023139075}
   failPanel: {fileID: 161264791}
 --- !u!114 &1223409576

@@ -80,12 +80,13 @@ namespace Managers
             if (GameState == GameState.Start)
             {
                 GameState = GameState.Playing;
-                _currentPlatform?.StartMoving();
+                _currentPlatform.StartMoving();
                 _character.SetTargetPosition(_lastPlatform.GetPosition());
                 return;
             }
             
             if (_currentPlatform is { IsMoving: false } && GameState is GameState.Start or GameState.Playing) return;
+            if (_currentPlatform is null) return;
 
             _currentPlatform.StopMoving();
 
@@ -117,8 +118,8 @@ namespace Managers
 
         private void SpawnFinishPlatformForLevel(int level)
         {
-            if (_currentFinish != null)
-                Object.Destroy(_currentFinish.gameObject);
+            //if (_currentFinish != null)
+            //    Object.Destroy(_currentFinish.gameObject);
 
             var zStep = (_spawner as PlatformSpawner).ZStep;
             
@@ -164,13 +165,16 @@ namespace Managers
 
         public void NextLevel()
         {
+            GameState = GameState.Start;
             _uiManager.UpdateLevelText();
             _spawner.SetStartPosition(_currentFinish.transform.position,_gameSettings.GetStepCountForLevel(CurrentLevel));
-            SpawnFinishPlatformForLevel(CurrentLevel);
             var newWidth = _gameSettings.initialPlatformWidth;
+            _lastPlatform = _currentFinish;
             _currentPlatform = _spawner.SpawnNext(newWidth);
-            _currentPlatform.StartMoving();
+            _currentPlatform.StopMoving();
+            SpawnFinishPlatformForLevel(CurrentLevel);
             _character.SetTargetPosition(_lastPlatform.GetPosition());
+            _character.GetReadyForNextLevel();
         }
     }
 }

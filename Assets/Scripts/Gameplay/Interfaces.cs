@@ -23,6 +23,7 @@ namespace Gameplay
         void ResetSpeedMultiplier();
         void StopMoving();
         void CelebrateSuccess();
+        void GetReadyForNextLevel();
     }
 
     public interface IGameManager
@@ -37,7 +38,7 @@ namespace Gameplay
 
     public interface IPlatformSpawner
     {
-        IPlatform SpawnInitial();
+        IPlatform SpawnInitial(Vector3? spawnPos = null);
         public IPlatform SpawnNext(float width);
         void SetStartPosition(Vector3 start, int platformsCount);
         void DisableSpawning();

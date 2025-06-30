@@ -115,29 +115,16 @@ namespace Managers
             _currentPlatform = _spawner.SpawnNext(newWidth);
             _currentPlatform?.StartMoving();
         }
-
+        
         private void SpawnFinishPlatformForLevel(int level)
         {
-            //if (_currentFinish != null)
-            //    Object.Destroy(_currentFinish.gameObject);
+            var stepCount = _gameSettings.GetStepCountForLevel(level) + 1;
+            _currentFinish = (_spawner as PlatformSpawner)?.SpawnFinishPlatform(_lastPlatform.GetPosition(), stepCount);
 
-            var zStep = (_spawner as PlatformSpawner).ZStep;
-            
-            var stepCount = _gameSettings.GetStepCountForLevel(level) +1;
-            var beginPosZ = 0f;
-            if (_currentFinish)
+            if (_currentFinish != null)
             {
-                beginPosZ = _currentFinish.transform.position.z;
+                _currentFinish.OnPlayerReached += LevelComplete;
             }
-            var zOffset = stepCount * zStep + beginPosZ;
-            
-            _currentFinish = _container.InstantiatePrefabForComponent<FinishPlatform>(
-                _finishPrefab,
-                new Vector3(0f, 0f, zOffset),
-                Quaternion.identity,
-                null);
-
-            _currentFinish.OnPlayerReached += LevelComplete;
         }
 
         public void GameOver()

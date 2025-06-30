@@ -1333,6 +1333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 776d93ae97524808bb93dfe7930968dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  platformParentTransform: {fileID: 310612268}
   gameSettings: {fileID: 11400000, guid: d2ba60a896e658341b09a29fd344faf3, type: 2}
   platformPrefab: {fileID: 199055800753380928, guid: 5a2215dac404c5545950df72ecbb778a, type: 3}
   characterInScene: {fileID: 1125772534}

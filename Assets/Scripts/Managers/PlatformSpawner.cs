@@ -9,8 +9,10 @@ namespace Managers
     {
         public event Action OnPlatformMissed;
         public event Action LastPlatformPlaced;
+        private readonly Transform _platformParent;
         private readonly DiContainer _container;
         private readonly MovingPlatform _platformPrefab;
+        private readonly FinishPlatform _finishPlatformPrefab;
         private readonly GameSettings _gameSettings;
 
         private Vector3 _lastPlatformPosition;
@@ -24,11 +26,13 @@ namespace Managers
 
         private MovingPlatform _lastSpawnedPlatform;
 
-        public PlatformSpawner(DiContainer container, MovingPlatform platformPrefab, GameSettings gameSettings)
+        public PlatformSpawner(DiContainer container, MovingPlatform platformPrefab, FinishPlatform finishPlatformPrefab, GameSettings gameSettings,Transform platformParent)
         {
             _container = container;
             _platformPrefab = platformPrefab;
+            _finishPlatformPrefab = finishPlatformPrefab;
             _gameSettings = gameSettings;
+            _platformParent = platformParent;
 
             _lastPlatformPosition = Vector3.zero;
         }
@@ -44,7 +48,7 @@ namespace Managers
                 _platformPrefab,
                 spawnPos.GetValueOrDefault(Vector3.zero),
                 Quaternion.identity,
-                null
+                _platformParent
             );
 
             var scale = platform.transform.localScale;
@@ -79,7 +83,7 @@ namespace Managers
                 _platformPrefab,
                 spawnPos,
                 Quaternion.identity,
-                null
+                _platformParent
             );
 
             var scale = platform.transform.localScale;
@@ -101,6 +105,20 @@ namespace Managers
 
             return platform;
         }
+        
+        public FinishPlatform SpawnFinishPlatform(Vector3 startPosition, int stepCount)
+        {
+            var zOffset = ZStep * stepCount + startPosition.z;
+
+            var finish = _container.InstantiatePrefabForComponent<FinishPlatform>(
+                _finishPlatformPrefab,
+                new Vector3(0f, 0f, zOffset),
+                Quaternion.identity,
+                _platformParent);
+
+            return finish;
+        }
+
 
         public void SetStartPosition(Vector3 start, int platformsCount)
         {

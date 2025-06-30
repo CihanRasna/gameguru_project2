@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using Zenject;
 
@@ -18,7 +19,7 @@ namespace Gameplay
         private float _currentSpeed;
         private float _maxSpeed;
         private float _distanceThreshold;
-        
+
         private static readonly int Success = Animator.StringToHash("Success");
         private static readonly int Play = Animator.StringToHash("Play");
 
@@ -48,7 +49,9 @@ namespace Gameplay
 
             UpdateSpeedBasedOnDistance(distance);
 
-            transform.position = distance < 0.1f ? _targetPosition : Vector3.MoveTowards(position, _targetPosition, _currentSpeed * Time.deltaTime);
+            transform.position = distance < 0.1f
+                ? _targetPosition
+                : Vector3.MoveTowards(position, _targetPosition, _currentSpeed * Time.deltaTime);
         }
 
         public void SetTargetPosition(Vector3 target)
@@ -91,6 +94,7 @@ namespace Gameplay
 
         public void CelebrateSuccess()
         {
+            transform.DOMove(_targetPosition, 0.25f);
             _isSucceed = true;
             _animator.SetTrigger(Success);
         }
@@ -99,7 +103,17 @@ namespace Gameplay
         {
             _isSucceed = false;
             _isFalling = false;
+            
+            ResetSpeedMultiplier();
             _animator.SetTrigger(Play);
+            _rigidbody.isKinematic = true;
+            
+            _targetPosition = transform.position;
+            _baseSpeed = _gameSettings.characterMoveSpeed;
+            _currentSpeed = _baseSpeed;
+
+            _maxSpeed = _gameSettings.characterMaxSpeed;
+            _distanceThreshold = _gameSettings.characterDistanceThreshold;
         }
     }
 }

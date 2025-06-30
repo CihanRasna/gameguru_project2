@@ -32,10 +32,10 @@ MonoBehaviour:
   characterDistanceThreshold: 3
   levelDistances:
   - level: 0
-    stepCount: 10
+    stepCount: 3
   - level: 1
-    stepCount: 15
+    stepCount: 5
   - level: 2
-    stepCount: 7
+    stepCount: 3
   - level: 3
     stepCount: 5

@@ -8,6 +8,7 @@ namespace Installers
 {
     public class GameInstaller : MonoInstaller
     {
+        public Transform platformParentTransform;
         public GameSettings gameSettings;
         public MovingPlatform platformPrefab;
         public CharacterController characterInScene;
@@ -21,7 +22,7 @@ namespace Installers
             Container.Bind<CameraManager>().FromComponentInHierarchy().AsSingle();
             Container.Bind<UIManager>().FromComponentInHierarchy().AsSingle();
             Container.Bind<IAudioManager>().To<AudioManager>().AsSingle();
-            Container.Bind<IPlatformSpawner>().To<PlatformSpawner>().AsSingle();
+            Container.Bind<IPlatformSpawner>().To<PlatformSpawner>().AsSingle().WithArguments(platformPrefab, finishPlatformPrefab,platformParentTransform, Container);
             
             //gameplay
             Container.Bind<MovingPlatform>().FromInstance(platformPrefab).AsSingle();

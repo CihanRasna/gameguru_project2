@@ -29,6 +29,7 @@ namespace Installers
             Container.Bind<ICharacter>().FromInstance(characterInScene).AsSingle();
             Container.Bind<InputHandler>().FromComponentInHierarchy().AsSingle();
             Container.Bind<FinishPlatform>().FromInstance(finishPlatformPrefab).AsSingle();
+            Container.Bind<OrbitCamera>().FromComponentInHierarchy().AsSingle();
 
             //audio
             var audioGo = new GameObject("NoteAudio");

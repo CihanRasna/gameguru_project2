@@ -162,6 +162,7 @@ namespace Managers
             SpawnFinishPlatformForLevel(CurrentLevel);
             _character.SetTargetPosition(_lastPlatform.GetPosition());
             _character.GetReadyForNextLevel();
+            _cameraManager.LevelStartCamTransition();
         }
     }
 }

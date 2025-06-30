@@ -54,6 +54,8 @@ namespace Gameplay
                 : Vector3.MoveTowards(position, _targetPosition, _currentSpeed * Time.deltaTime);
         }
 
+        public Transform GetTransform() => transform;
+
         public void SetTargetPosition(Vector3 target)
         {
             _targetPosition = target;

@@ -18,6 +18,7 @@ namespace Gameplay
 
     public interface ICharacter
     {
+        Transform GetTransform();
         void SetTargetPosition(Vector3 targetPosition);
         void SetSpeedMultiplier(float multiplier);
         void ResetSpeedMultiplier();

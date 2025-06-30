@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Gameplay;
 using UnityEngine;
 using Zenject;
@@ -20,6 +21,9 @@ namespace Managers
         private bool _canSpawn = true;
         private int _spawnedPlatformsCount = 0;
         private int _maxPlatformsForCurrentLevel = 0;
+        
+        private readonly List<IPlatform> _spawnedPlatforms = new();
+        private const int MaxPlatformCount = 15;
 
         public float ZStep { get; set; } = 2f;
         public float XStep { get; set; } = 3f;
@@ -61,6 +65,7 @@ namespace Managers
             _lastPlatformPosition = spawnPos.GetValueOrDefault(Vector3.zero);
             _lastSpawnedPlatform = platform;
 
+            RegisterPlatform(platform);
             return platform;
         }
 
@@ -102,7 +107,8 @@ namespace Managers
             _lastSpawnedPlatform = platform;
             _spawnRight = !_spawnRight;
             _spawnedPlatformsCount += 1;
-
+            
+            RegisterPlatform(platform);
             return platform;
         }
         
@@ -116,7 +122,18 @@ namespace Managers
                 Quaternion.identity,
                 _platformParent);
 
+            RegisterPlatform(finish);
             return finish;
+        }
+        
+        private void RegisterPlatform(IPlatform platform)
+        {
+            _spawnedPlatforms.Add(platform);
+
+            if (_spawnedPlatforms.Count <= MaxPlatformCount) return;
+            var toRemove = _spawnedPlatforms[0];
+            (toRemove as MonoBehaviour)?.gameObject.SetActive(false);
+            _spawnedPlatforms.RemoveAt(0);
         }
 
 

@@ -9,13 +9,13 @@ namespace Gameplay
     public class MovingPlatform : MonoBehaviour, IPlatform
     {
         [SerializeField] private BoxCollider boxCollider;
-        
+
         private Renderer _rend;
         private MaterialPropertyBlock _propBlock;
         private Color _currentColor;
         public float MoveSpeed => _gameSettings.moveSpeed;
         private int _direction;
-        
+
         public bool IsMoving { get; private set; } = false;
 
         private GameSettings _gameSettings;
@@ -93,6 +93,20 @@ namespace Gameplay
                 if (myX + myHalf < baseX - baseHalf)
                     Fall();
             }
+        }
+
+        public void FallOnFail()
+        {
+            IsMoving = false;
+
+            if (!TryGetComponent<Rigidbody>(out var rb))
+            {
+                rb = gameObject.AddComponent<Rigidbody>();
+                rb.isKinematic = false;
+                rb.AddExplosionForce(5f, transform.position, 5, 2f,ForceMode.Impulse);
+            }
+                
+            DOVirtual.DelayedCall(2f, () => gameObject.SetActive(false));
         }
 
 

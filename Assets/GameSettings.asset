@@ -34,8 +34,6 @@ MonoBehaviour:
   - level: 0
     stepCount: 3
   - level: 1
-    stepCount: 5
+    stepCount: 4
   - level: 2
-    stepCount: 3
-  - level: 3
     stepCount: 5

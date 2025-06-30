@@ -19,6 +19,7 @@ namespace Gameplay
     public interface ICharacter
     {
         Transform GetTransform();
+        void SetTargetPositionInstant(Vector3 targetPosition);
         void SetTargetPosition(Vector3 targetPosition);
         void SetSpeedMultiplier(float multiplier);
         void ResetSpeedMultiplier();
@@ -43,8 +44,11 @@ namespace Gameplay
         public IPlatform SpawnNext(float width);
         void SetStartPosition(Vector3 start, int platformsCount);
         void DisableSpawning();
+        void EnableSpawning();
         event Action OnPlatformMissed;
         event Action LastPlatformPlaced;
+        IPlatform LastFinishPlatform { get; set; }
+        FinishPlatform GetSecondLastFinishPlatform();
     }
     
     public interface IAudioManager

@@ -73,7 +73,7 @@ namespace Managers
         {
             GameState = GameState.Success;
             _character.SetSpeedMultiplier(25f);
-            _character.SetTargetPosition(_currentFinish.transform.position);
+            _character.SetTargetPosition(_currentFinish.GetPosition());
         }
 
         public void OnPlayerTap()
@@ -85,9 +85,9 @@ namespace Managers
                 _character.SetTargetPosition(_lastPlatform.GetPosition());
                 return;
             }
-            
-            if (_currentPlatform is { IsMoving: false } && GameState is GameState.Start or GameState.Playing) return;
-            if (_currentPlatform is null) return;
+
+            if (GameState is GameState.Success or GameState.Fail) return;
+            if (_currentPlatform is null or { IsMoving: false }) return;
 
             _currentPlatform.StopMoving();
 
@@ -116,12 +116,15 @@ namespace Managers
             _currentPlatform = _spawner.SpawnNext(newWidth);
             _currentPlatform?.StartMoving();
         }
-        
+
         private void SpawnFinishPlatformForLevel(int stepCount)
         {
-            Debug.Log(stepCount);
-            Debug.Log(_lastPlatform.GetPosition());
-            _currentFinish = (_spawner as PlatformSpawner)?.SpawnFinishPlatform(_lastPlatform.GetPosition(), stepCount);
+            var pos = Vector3.zero;
+            if (_lastPlatform is not null)
+            {
+                pos = _lastPlatform.GetPosition();
+            }
+            _currentFinish = (_spawner as PlatformSpawner)?.SpawnFinishPlatform(pos, stepCount);
 
             if (_currentFinish != null)
             {
@@ -131,26 +134,46 @@ namespace Managers
 
         public void GameOver()
         {
-            if (GameState is not GameState.Fail) return;
+            if (GameState is GameState.Fail or GameState.Success) return;
             GameState = GameState.Fail;
+            Debug.Log("FAIL GAME OVER");
+            
+            _cameraManager.LevelFailCamTransition();
+            _uiManager.ShowFailPanelDelayed(1f);
 
             _spawner.DisableSpawning();
             _inputHandler.DisableInput();
             _character.StopMoving();
+
+            var castedSpawner = (_spawner as PlatformSpawner);
+            castedSpawner?.HandleFail();
+        }
+
+        public void RestartFromLastPlatform()
+        {
+            var lastFinish = _spawner.LastFinishPlatform;
+            var secondLast = _spawner.GetSecondLastFinishPlatform();
+            if (lastFinish == null) return;
+            _spawner.EnableSpawning();
+            _inputHandler.EnableInput();
+            _character.SetTargetPositionInstant(secondLast != null ? lastFinish.GetPosition() : Vector3.zero);
+            _character.GetReadyForNextLevel();
+            RebuildLevel();
         }
 
         public void LevelComplete()
         {
+            Debug.Log("LEVEL COMPLETE");
             if (GameState is not GameState.Success) return;
-
             GameState = GameState.Success;
+            Debug.Log("LEVEL COMPLETE");
 
             _character.CelebrateSuccess();
             CurrentLevel += 1;
             _cameraManager.LevelCompleteCamTransition();
-            _uiManager.ShowWinPanelDelayed(3f);
+            _uiManager.ShowWinPanelDelayed(1f);
         }
-        
+
 
         public void NextLevel()
         {
@@ -166,6 +189,34 @@ namespace Managers
             _character.SetTargetPosition(_lastPlatform.GetPosition());
             _character.GetReadyForNextLevel();
             _cameraManager.LevelStartCamTransition();
+        }
+        
+        public void RebuildLevel()
+        {
+            /*GameState = GameState.Start;
+            var stepCount = _gameSettings.GetStepCountForLevel(CurrentLevel);
+            var secondLast = _spawner.GetSecondLastFinishPlatform();
+            _uiManager.UpdateLevelText();
+            var newWidth = _gameSettings.initialPlatformWidth;
+            if (noInitial)
+            {
+                _lastPlatform = _spawner.SpawnInitial();
+                _spawner.SetStartPosition(_lastPlatform.GetPosition(), stepCount);
+                _character.SetTargetPosition(_lastPlatform.GetPosition());
+            }
+            else
+            {
+                _lastPlatform = secondLast;
+                SpawnFinishPlatformForLevel(stepCount);
+                _spawner.SetStartPosition(_lastPlatform.GetPosition(), stepCount);
+                _character.SetTargetPosition(secondLast.GetPosition());
+            }
+
+            _currentPlatform = _spawner.SpawnNext(newWidth);
+            _currentPlatform.StopMoving();
+            
+            _character.GetReadyForNextLevel();
+            _cameraManager.LevelStartCamTransition();*/
         }
     }
 }

@@ -16,12 +16,14 @@ namespace Managers
         private readonly FinishPlatform _finishPlatformPrefab;
         private readonly GameSettings _gameSettings;
 
+        public IPlatform LastFinishPlatform { get; set; }
+
         private Vector3 _lastPlatformPosition;
         private bool _spawnRight = true;
         private bool _canSpawn = true;
         private int _spawnedPlatformsCount = 0;
         private int _maxPlatformsForCurrentLevel = 0;
-        
+
         private readonly List<IPlatform> _spawnedPlatforms = new();
         private const int MaxPlatformCount = 15;
 
@@ -30,7 +32,8 @@ namespace Managers
 
         private MovingPlatform _lastSpawnedPlatform;
 
-        public PlatformSpawner(DiContainer container, MovingPlatform platformPrefab, FinishPlatform finishPlatformPrefab, GameSettings gameSettings,Transform platformParent)
+        public PlatformSpawner(DiContainer container, MovingPlatform platformPrefab,
+            FinishPlatform finishPlatformPrefab, GameSettings gameSettings, Transform platformParent)
         {
             _container = container;
             _platformPrefab = platformPrefab;
@@ -44,6 +47,11 @@ namespace Managers
         public void DisableSpawning()
         {
             _canSpawn = false;
+        }
+
+        public void EnableSpawning()
+        {
+            _canSpawn = true;
         }
 
         public IPlatform SpawnInitial(Vector3? spawnPos = null)
@@ -107,11 +115,11 @@ namespace Managers
             _lastSpawnedPlatform = platform;
             _spawnRight = !_spawnRight;
             _spawnedPlatformsCount += 1;
-            
+
             RegisterPlatform(platform);
             return platform;
         }
-        
+
         public FinishPlatform SpawnFinishPlatform(Vector3 startPosition, int stepCount)
         {
             stepCount += 1;
@@ -124,9 +132,63 @@ namespace Managers
                 _platformParent);
 
             RegisterPlatform(finish);
+            LastFinishPlatform = finish;
             return finish;
         }
-        
+
+        public FinishPlatform GetSecondLastFinishPlatform()
+        {
+            var count = 0;
+            for (var i = _spawnedPlatforms.Count - 1; i >= 0; i--)
+            {
+                if (_spawnedPlatforms[i] is not FinishPlatform finish) continue;
+                count += 1;
+                if (count == 2)
+                {
+                    return finish;
+                }
+            }
+
+            return null;
+        }
+
+
+        public void HandleFail()
+        {
+            if (LastFinishPlatform == null) return;
+
+            var secondLastFinishPlatform = GetSecondLastFinishPlatform();
+
+            if (secondLastFinishPlatform is null)
+            {
+                for (var i = _spawnedPlatforms.Count - 1 - 1; i >= 0; i--)
+                {
+                    if (_spawnedPlatforms[i] is MovingPlatform platform)
+                    {
+                        platform.FallOnFail();
+                        _spawnedPlatforms.Remove(platform);
+                    }
+                }
+                return;
+            }
+            
+            var temp = new List<MovingPlatform>();
+            foreach (var p in _spawnedPlatforms)
+            {
+                if (p is MovingPlatform platform && platform.transform.position.z > secondLastFinishPlatform.transform.position.z)
+                {
+                    temp.Add(platform);
+                }
+            }
+
+            foreach (var platform in temp)
+            {
+                platform.FallOnFail();
+                _spawnedPlatforms.Remove(platform);
+            }
+        }
+
+
         private void RegisterPlatform(IPlatform platform)
         {
             _spawnedPlatforms.Add(platform);

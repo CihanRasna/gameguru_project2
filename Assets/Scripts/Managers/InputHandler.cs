@@ -19,6 +19,11 @@ namespace Managers
         {
             _inputEnabled = false;
         }
+        
+        public void EnableInput()
+        {
+            _inputEnabled = true;
+        }
 
         private void Update()
         {

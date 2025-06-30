@@ -10,7 +10,7 @@ namespace Gameplay
 
         private Animator _animator;
         private Rigidbody _rigidbody;
-        private Vector3 _targetPosition;
+        public Vector3 _targetPosition;
         private bool _isFalling;
         private bool _isSucceed;
 
@@ -58,6 +58,15 @@ namespace Gameplay
 
         public void SetTargetPosition(Vector3 target)
         {
+            target.y = 0f;
+            _targetPosition = target;
+        }
+        
+        public void SetTargetPositionInstant(Vector3 target)
+        {
+            target.y = 0f;
+            transform.localEulerAngles = Vector3.zero;
+            transform.position = target;
             _targetPosition = target;
         }
 

@@ -124,6 +124,7 @@ namespace Managers
             {
                 pos = _lastPlatform.GetPosition();
             }
+
             _currentFinish = (_spawner as PlatformSpawner)?.SpawnFinishPlatform(pos, stepCount);
 
             if (_currentFinish != null)
@@ -137,7 +138,7 @@ namespace Managers
             if (GameState is GameState.Fail or GameState.Success) return;
             GameState = GameState.Fail;
             Debug.Log("FAIL GAME OVER");
-            
+
             _cameraManager.LevelFailCamTransition();
             _uiManager.ShowFailPanelDelayed(1f);
 
@@ -180,7 +181,7 @@ namespace Managers
             GameState = GameState.Start;
             var stepCount = _gameSettings.GetStepCountForLevel(CurrentLevel);
             _uiManager.UpdateLevelText();
-            _spawner.SetStartPosition(_currentFinish.transform.position,stepCount);
+            _spawner.SetStartPosition(_currentFinish.transform.position, stepCount);
             var newWidth = _gameSettings.initialPlatformWidth;
             _lastPlatform = _currentFinish;
             _currentPlatform = _spawner.SpawnNext(newWidth);
@@ -190,33 +191,40 @@ namespace Managers
             _character.GetReadyForNextLevel();
             _cameraManager.LevelStartCamTransition();
         }
-        
+
         public void RebuildLevel()
         {
-            /*GameState = GameState.Start;
+            GameState = GameState.Start;
             var stepCount = _gameSettings.GetStepCountForLevel(CurrentLevel);
             var secondLast = _spawner.GetSecondLastFinishPlatform();
             _uiManager.UpdateLevelText();
             var newWidth = _gameSettings.initialPlatformWidth;
-            if (noInitial)
+            if (!secondLast)
             {
+                Debug.Log("HAS NOT SECOND LAST");
                 _lastPlatform = _spawner.SpawnInitial();
                 _spawner.SetStartPosition(_lastPlatform.GetPosition(), stepCount);
                 _character.SetTargetPosition(_lastPlatform.GetPosition());
             }
             else
             {
+                Debug.Log("HAS SECOND LAST");
+                
+                Debug.Log(secondLast.transform.position);
                 _lastPlatform = secondLast;
-                SpawnFinishPlatformForLevel(stepCount);
                 _spawner.SetStartPosition(_lastPlatform.GetPosition(), stepCount);
-                _character.SetTargetPosition(secondLast.GetPosition());
+                _character.SetTargetPositionInstant(secondLast.GetPosition());
+                if (secondLast == (FinishPlatform)_spawner.LastFinishPlatform)
+                {
+                    SpawnFinishPlatformForLevel(stepCount);
+                }
             }
 
             _currentPlatform = _spawner.SpawnNext(newWidth);
             _currentPlatform.StopMoving();
-            
+
             _character.GetReadyForNextLevel();
-            _cameraManager.LevelStartCamTransition();*/
+            _cameraManager.LevelStartCamTransition();
         }
     }
 }

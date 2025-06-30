@@ -1,5 +1,7 @@
 using System.Collections;
+using Gameplay;
 using UnityEngine;
+using Zenject;
 
 namespace Managers
 {
@@ -7,9 +9,10 @@ namespace Managers
     {
         [SerializeField] private GameObject winPanel;
         [SerializeField] private GameObject failPanel;
-        private GameManager _gameManager;
+        private IGameManager _gameManager;
 
-        public void Initialize(GameManager gameManager)
+        [Inject]
+        public void Initialize(IGameManager gameManager)
         {
             _gameManager = gameManager;
         }

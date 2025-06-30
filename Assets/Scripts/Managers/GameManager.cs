@@ -55,15 +55,11 @@ namespace Managers
             GameState = GameState.Start;
 
             _spawner.SetStartPosition(Vector3.zero, _gameSettings.GetStepCountForLevel(CurrentLevel));
-
-            _lastPlatform = spawner.SpawnInitial();
+            _lastPlatform = _spawner.SpawnInitial();
             var newWidth = _lastPlatform.GetWidth();
-            _currentPlatform = spawner.SpawnNext(newWidth);
-            _currentPlatform?.StartMoving();
-
+            _currentPlatform = _spawner.SpawnNext(newWidth);
+            _currentPlatform.StopMoving();
             SpawnFinishPlatformForLevel(CurrentLevel);
-
-            _character.SetTargetPosition(_lastPlatform.GetPosition());
         }
 
         [Inject]
@@ -82,7 +78,15 @@ namespace Managers
 
         public void OnPlayerTap()
         {
-            if (_currentPlatform is { IsMoving: false } && GameState == GameState.Start) return;
+            if (GameState == GameState.Start)
+            {
+                GameState = GameState.Playing;
+                _currentPlatform?.StartMoving();
+                _character.SetTargetPosition(_lastPlatform.GetPosition());
+                return;
+            }
+            
+            if (_currentPlatform is { IsMoving: false } && GameState is GameState.Start or GameState.Playing) return;
 
             _currentPlatform.StopMoving();
 

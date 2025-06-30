@@ -29,6 +29,7 @@ namespace Gameplay
         void OnPlayerTap();
         void LevelComplete();
         void GameOver();
+        void NextLevel();
         GameState GameState { get; }
     }
 

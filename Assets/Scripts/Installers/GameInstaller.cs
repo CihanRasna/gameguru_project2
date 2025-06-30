@@ -16,6 +16,13 @@ namespace Installers
 
         public override void InstallBindings()
         {
+            // Managers
+            Container.Bind<IGameManager>().To<GameManager>().AsSingle();
+            Container.Bind<CameraManager>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<UIManager>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<IAudioManager>().To<AudioManager>().AsSingle();
+            Container.Bind<IPlatformSpawner>().To<PlatformSpawner>().AsSingle();
+            
             //gameplay
             Container.Bind<MovingPlatform>().FromInstance(platformPrefab).AsSingle();
             Container.Bind<ICharacter>().FromInstance(characterInScene).AsSingle();
@@ -30,13 +37,6 @@ namespace Installers
 
             //settings
             Container.BindInstance(gameSettings).AsSingle();
-
-            // Managers
-            Container.Bind<IGameManager>().To<GameManager>().AsSingle();
-            Container.Bind<CameraManager>().FromComponentInHierarchy().AsSingle();
-            Container.Bind<UIManager>().FromComponentInHierarchy().AsSingle();
-            Container.Bind<IAudioManager>().To<AudioManager>().AsSingle();
-            Container.Bind<IPlatformSpawner>().To<PlatformSpawner>().AsSingle();
         }
     }
 }

@@ -94,7 +94,7 @@ namespace Managers
 
             if (edgeDistance > maxPossibleOverlap)
             {
-               // _audioManager.PlayFailure();
+                _audioManager.PlayFailure();
                 (_currentPlatform as MovingPlatform)?.Fall();
                 GameOver();
                 return;
@@ -112,7 +112,7 @@ namespace Managers
             else
             {
                 _perfectCombo = 0;
-                //_audioManager.PlayFailure();
+                _audioManager.PlayFailure();
                 (_currentPlatform as MovingPlatform)?.CutPlatform(deltaX);
                 _character.ResetSpeedMultiplier();
             }

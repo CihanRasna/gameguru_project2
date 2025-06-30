@@ -12,7 +12,6 @@ namespace Installers
         public GameSettings gameSettings;
         public MovingPlatform platformPrefab;
         public CharacterController characterInScene;
-        public AudioClip noteClip;
         public FinishPlatform finishPlatformPrefab;
 
         public override void InstallBindings()
@@ -34,7 +33,6 @@ namespace Installers
             //audio
             var audioGo = new GameObject("NoteAudio");
             var audioSource = audioGo.AddComponent<AudioSource>();
-            Container.Bind<AudioClip>().FromInstance(noteClip).AsSingle();
             Container.Bind<AudioSource>().FromInstance(audioSource).AsSingle();
 
             //settings

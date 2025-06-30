@@ -5,33 +5,35 @@ namespace Managers
 {
     public class AudioManager : IAudioManager
     {
-        private readonly AudioSource audioSource;
-        private readonly AudioClip noteClip;
-        private readonly GameSettings settings;
+        private readonly AudioSource _audioSource;
+        private readonly AudioClip _noteClip;
+        private readonly AudioClip _badNoteClip;
+        private readonly GameSettings _settings;
 
-        public AudioManager(AudioSource source, AudioClip clip, GameSettings gameSettings)
+        public AudioManager(AudioSource source, GameSettings gameSettings)
         {
-            audioSource = source;
-            noteClip = clip;
-            settings = gameSettings;
+            _audioSource = source;
+            _noteClip = gameSettings.noteClip;
+            _badNoteClip = gameSettings.badNoteClip;
+            _settings = gameSettings;
         }
 
         public void PlayNote(int perfectCombo)
         {
             var pitch = Mathf.Clamp(
-                settings.basePitch + perfectCombo * settings.pitchStepPerPerfect,
-                settings.basePitch,
-                settings.maxPitch
+                _settings.basePitch + perfectCombo * _settings.pitchStepPerPerfect,
+                _settings.basePitch,
+                _settings.maxPitch
             );
 
-            audioSource.pitch = pitch;
-            audioSource.PlayOneShot(noteClip);
+            _audioSource.pitch = pitch;
+            _audioSource.PlayOneShot(_noteClip);
         }
 
         public void PlayFailure()
         {
-            audioSource.pitch = settings.basePitch;
-            audioSource.PlayOneShot(noteClip);
+            _audioSource.pitch = _settings.basePitch;
+            _audioSource.PlayOneShot(_badNoteClip);
         }
     }
 }

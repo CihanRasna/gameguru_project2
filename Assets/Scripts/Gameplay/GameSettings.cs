@@ -13,6 +13,8 @@ namespace Gameplay
         public float basePitch = 1f;
         public float pitchStepPerPerfect = 0.1f;
         public float maxPitch = 2f;
+        public AudioClip noteClip;
+        public AudioClip badNoteClip;
 
         [Header("Platform")] public float initialPlatformWidth = 3f;
         public float minPlatformWidth = 0.5f;

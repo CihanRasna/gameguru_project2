@@ -201,15 +201,12 @@ namespace Managers
             var newWidth = _gameSettings.initialPlatformWidth;
             if (!secondLast)
             {
-                Debug.Log("HAS NOT SECOND LAST");
                 _lastPlatform = _spawner.SpawnInitial();
                 _spawner.SetStartPosition(_lastPlatform.GetPosition(), stepCount);
                 _character.SetTargetPosition(_lastPlatform.GetPosition());
             }
             else
             {
-                Debug.Log("HAS SECOND LAST");
-                
                 Debug.Log(secondLast.transform.position);
                 _lastPlatform = secondLast;
                 _spawner.SetStartPosition(_lastPlatform.GetPosition(), stepCount);

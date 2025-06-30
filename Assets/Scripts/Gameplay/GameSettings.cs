@@ -7,35 +7,33 @@ namespace Gameplay
     [CreateAssetMenu(fileName = "GameSettings", menuName = "Settings/GameSettings")]
     public class GameSettings : ScriptableObject
     {
-        [Header("Perfect Match")]
-        [Range(0f, 1f)]
+        [Header("Perfect Match")] [Range(0f, 1f)]
         public float perfectTolerance = 0.1f;
+
         public float basePitch = 1f;
         public float pitchStepPerPerfect = 0.1f;
         public float maxPitch = 2f;
 
-        [Header("Platform")]
-        public float initialPlatformWidth = 3f;
+        [Header("Platform")] public float initialPlatformWidth = 3f;
         public float minPlatformWidth = 0.5f;
         public float moveSpeed = 2f;
-        
-        [Header("Platform Colors")]
-        public List<Color> platformColors;
-        
-        [Header("Character")]
-        public float characterMoveSpeed = 2f;
-        
-        [Header("Level Data")]
-        public List<LevelDistance> levelDistances;
+
+        [Header("Platform Colors")] public List<Color> platformColors;
+
+        [Header("Character")] public float characterMoveSpeed = 2f;
+        public float characterMaxSpeed = 6f;
+        public float characterDistanceThreshold = 3f;
+
+        [Header("Level Data")] public List<LevelDistance> levelDistances;
+
 
         public int GetStepCountForLevel(int level)
         {
             var entry = levelDistances.FirstOrDefault(ld => ld.level == level);
             return entry?.stepCount ?? 20;
         }
-
     }
-    
+
     [System.Serializable]
     public class LevelDistance
     {

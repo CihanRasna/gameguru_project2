@@ -6,6 +6,7 @@ namespace Managers
 {
     public class GameManager : IGameManager
     {
+        [SerializeField] private Animator cameraAnimator; 
         private readonly FinishPlatform _finishPrefab;
         private readonly ICharacter _character;
         private readonly IPlatformSpawner _spawner;
@@ -13,6 +14,8 @@ namespace Managers
         private readonly GameSettings _gameSettings;
         private readonly DiContainer _container;
         private readonly InputHandler _inputHandler;
+        private readonly CameraManager _cameraManager;
+        private readonly UIManager _uiManager;
 
         private IPlatform _lastPlatform;
         private IPlatform _currentPlatform;
@@ -35,7 +38,9 @@ namespace Managers
             GameSettings gameSettings,
             InputHandler inputHandler,
             FinishPlatform finishPrefab,
-            DiContainer container)
+            DiContainer container,
+            CameraManager cameraManager,
+            UIManager uiManager)
         {
             _character = character;
             _spawner = spawner;
@@ -44,6 +49,8 @@ namespace Managers
             _inputHandler = inputHandler;
             _finishPrefab = finishPrefab;
             _container = container;
+            _uiManager = uiManager;
+            _cameraManager = cameraManager;
 
             GameState = GameState.Start;
 
@@ -63,11 +70,19 @@ namespace Managers
         public void Init()
         {
             _spawner.OnPlatformMissed += GameOver;
+            _spawner.LastPlatformPlaced += LastPlatformPlaced;
+        }
+
+        public void LastPlatformPlaced()
+        {
+            GameState = GameState.Success;
+            _character.SetSpeedMultiplier(25f);
+            _character.SetTargetPosition(_currentFinish.transform.position);
         }
 
         public void OnPlayerTap()
         {
-            if (!_currentPlatform.IsMoving) return;
+            if (_currentPlatform is { IsMoving: false } && GameState == GameState.Start) return;
 
             _currentPlatform.StopMoving();
 
@@ -104,7 +119,7 @@ namespace Managers
 
             var zStep = (_spawner as PlatformSpawner).ZStep;
             
-            var stepCount = _gameSettings.GetStepCountForLevel(level);
+            var stepCount = _gameSettings.GetStepCountForLevel(level) +1;
             var beginPosZ = 0f;
             if (_currentFinish)
             {
@@ -139,8 +154,10 @@ namespace Managers
 
             _character.StopMoving();
             CurrentLevel += 1;
-            // UI aç, skor hesapla vs.
+            _cameraManager.LevelCompleteCamTransition();
+            _uiManager.ShowWinPanelDelayed(3f);
         }
+        
 
         public void NextLevel()
         {

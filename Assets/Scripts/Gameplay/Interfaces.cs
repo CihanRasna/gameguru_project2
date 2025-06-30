@@ -39,6 +39,7 @@ namespace Gameplay
         void SetStartPosition(Vector3 start, int platformsCount);
         void DisableSpawning();
         event Action OnPlatformMissed;
+        event Action LastPlatformPlaced;
     }
     
     public interface IAudioManager

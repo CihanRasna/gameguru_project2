@@ -8,6 +8,7 @@ namespace Managers
     public class PlatformSpawner : IPlatformSpawner
     {
         public event Action OnPlatformMissed;
+        public event Action LastPlatformPlaced;
         private readonly DiContainer _container;
         private readonly MovingPlatform _platformPrefab;
         private readonly GameSettings _gameSettings;
@@ -64,8 +65,12 @@ namespace Managers
         public IPlatform SpawnNext(float width)
         {
             if (!_canSpawn) return null;
-            
-            if (_spawnedPlatformsCount >= _maxPlatformsForCurrentLevel) return null;
+
+            if (_spawnedPlatformsCount >= _maxPlatformsForCurrentLevel)
+            {
+                LastPlatformPlaced?.Invoke();
+                return null;
+            }
             
             var clampedWidth = Mathf.Max(_gameSettings.minPlatformWidth, width);
             var newZ = _lastPlatformPosition.z + ZStep;

@@ -13,6 +13,10 @@ namespace Gameplay
 
         private float _baseSpeed;
         private float _speedMultiplier = 1f;
+        private float _currentSpeed;
+
+        private float _maxSpeed;
+        private float _distanceThreshold;
 
         private void Awake()
         {
@@ -24,6 +28,10 @@ namespace Gameplay
             _targetPosition = transform.position;
 
             _baseSpeed = _gameSettings.characterMoveSpeed;
+            _currentSpeed = _baseSpeed;
+
+            _maxSpeed = _gameSettings.characterMaxSpeed;
+            _distanceThreshold = _gameSettings.characterDistanceThreshold;
         }
 
         private void Update()
@@ -31,17 +39,11 @@ namespace Gameplay
             if (_isFalling) return;
 
             var position = transform.position;
-            var distance = Vector3.Distance(transform.position, _targetPosition);
+            var distance = Vector3.Distance(position, _targetPosition);
 
-            if (distance < 0.1f)
-            {
-                transform.position = _targetPosition;
-            }
-            else
-            {
-                var speed = _baseSpeed * _speedMultiplier;
-                transform.position = Vector3.MoveTowards(position, _targetPosition, speed * Time.deltaTime);
-            }
+            UpdateSpeedBasedOnDistance(distance);
+
+            transform.position = distance < 0.1f ? _targetPosition : Vector3.MoveTowards(position, _targetPosition, _currentSpeed * Time.deltaTime);
         }
 
         public void SetTargetPosition(Vector3 target)
@@ -51,15 +53,31 @@ namespace Gameplay
 
         public void SetSpeedMultiplier(float comboMultiplier)
         {
-            var speedMultiplier = 1f + 0.1f * comboMultiplier;
-            _speedMultiplier = speedMultiplier;
+            _speedMultiplier = 1f + 0.1f * comboMultiplier;
         }
 
         public void ResetSpeedMultiplier()
         {
             _speedMultiplier = 1f;
         }
-        
+
+        private void UpdateSpeedBasedOnDistance(float distance)
+        {
+            float targetSpeed;
+
+            if (distance > _distanceThreshold)
+            {
+                var t = Mathf.InverseLerp(_distanceThreshold, _distanceThreshold * 2f, distance);
+                targetSpeed = Mathf.Lerp(_baseSpeed, _maxSpeed, t);
+            }
+            else
+            {
+                targetSpeed = _baseSpeed;
+            }
+
+            _currentSpeed = targetSpeed * _speedMultiplier;
+        }
+
         public void StopMoving()
         {
             _isFalling = true;

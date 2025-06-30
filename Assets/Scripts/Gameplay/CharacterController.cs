@@ -18,6 +18,8 @@ namespace Gameplay
         private float _speedMultiplier = 1f;
         private float _currentSpeed;
         private float _maxSpeed;
+        private float _rotationSpeed = 5f;
+
         private float _distanceThreshold;
 
         private static readonly int Success = Animator.StringToHash("Success");
@@ -37,6 +39,7 @@ namespace Gameplay
             _currentSpeed = _baseSpeed;
 
             _maxSpeed = _gameSettings.characterMaxSpeed;
+            _rotationSpeed = _gameSettings.characterRotationSpeed;
             _distanceThreshold = _gameSettings.characterDistanceThreshold;
         }
 
@@ -45,13 +48,22 @@ namespace Gameplay
             if (_isFalling || _isSucceed) return;
 
             var position = transform.position;
-            var distance = Vector3.Distance(position, _targetPosition);
+
+            var targetPosXZ = new Vector3(_targetPosition.x, position.y, _targetPosition.z);
+            var distance = Vector3.Distance(new Vector3(position.x, 0, position.z), new Vector3(targetPosXZ.x, 0, targetPosXZ.z));
 
             UpdateSpeedBasedOnDistance(distance);
 
-            transform.position = distance < 0.1f
-                ? _targetPosition
-                : Vector3.MoveTowards(position, _targetPosition, _currentSpeed * Time.deltaTime);
+            transform.position = distance < 0.1f ? targetPosXZ : Vector3.MoveTowards(position, targetPosXZ, _currentSpeed * Time.deltaTime);
+
+            var lookDirection = targetPosXZ - transform.position;
+            lookDirection.y = 0;
+            if (lookDirection != Vector3.zero)
+            {
+                var targetRotation = Quaternion.LookRotation(lookDirection);
+                transform.rotation =
+                    Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * _rotationSpeed);
+            }
         }
 
         public Transform GetTransform() => transform;
@@ -61,7 +73,7 @@ namespace Gameplay
             target.y = 0f;
             _targetPosition = target;
         }
-        
+
         public void SetTargetPositionInstant(Vector3 target)
         {
             target.y = 0f;
@@ -114,11 +126,11 @@ namespace Gameplay
         {
             _isSucceed = false;
             _isFalling = false;
-            
+
             ResetSpeedMultiplier();
             _animator.SetTrigger(Play);
             _rigidbody.isKinematic = true;
-            
+
             _targetPosition = transform.position;
             _baseSpeed = _gameSettings.characterMoveSpeed;
             _currentSpeed = _baseSpeed;

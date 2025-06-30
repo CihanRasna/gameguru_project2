@@ -25,14 +25,14 @@ namespace Gameplay
         [Header("Character")] public float characterMoveSpeed = 2f;
         public float characterMaxSpeed = 6f;
         public float characterDistanceThreshold = 3f;
+        public float characterRotationSpeed;
 
         [Header("Level Data")] public List<LevelDistance> levelDistances;
-
 
         public int GetStepCountForLevel(int level)
         {
             var entry = levelDistances.FirstOrDefault(ld => ld.level == level);
-            return entry?.stepCount ?? levelDistances[Random.Range(0,levelDistances.Count)].stepCount;
+            return entry?.stepCount ?? levelDistances[Random.Range(0, levelDistances.Count)].stepCount;
         }
     }
 

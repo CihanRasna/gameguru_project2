@@ -163,7 +163,7 @@ namespace Gameplay
 
         public void PunchScale()
         {
-            transform.DOPunchScale(Vector3.one * 0.33f, 0.05f).OnComplete((() =>
+            transform.DOPunchScale(Vector3.one * 0.15f, 0.05f).OnComplete((() =>
             {
                 (_targetPlatform as MovingPlatform)?.PunchScale();
             }));

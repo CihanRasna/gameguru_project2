@@ -16,6 +16,8 @@ MonoBehaviour:
   basePitch: 1
   pitchStepPerPerfect: 0.1
   maxPitch: 2
+  noteClip: {fileID: 8300000, guid: 5d2acbbf9162ea8489cf995d2be55f6f, type: 3}
+  badNoteClip: {fileID: 8300000, guid: c4b14874738885340a002be9f2cce452, type: 3}
   initialPlatformWidth: 2
   minPlatformWidth: 0.35
   moveSpeed: 3
@@ -27,9 +29,10 @@ MonoBehaviour:
   - {r: 0.36561054, g: 0.9811321, b: 0.9811321, a: 1}
   - {r: 0.9811321, g: 0.36561054, b: 0.9811321, a: 1}
   - {r: 0.5, g: 0.19224104, b: 0.1721698, a: 1}
-  characterMoveSpeed: 1
+  characterMoveSpeed: 1.5
   characterMaxSpeed: 3
   characterDistanceThreshold: 3
+  characterRotationSpeed: 5
   levelDistances:
   - level: 0
     stepCount: 3

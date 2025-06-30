@@ -111,8 +111,11 @@ namespace Managers
             }
             else
             {
+                if (_perfectCombo > 0)
+                {
+                    _audioManager.PlayFailure();
+                }
                 _perfectCombo = 0;
-                _audioManager.PlayFailure();
                 (_currentPlatform as MovingPlatform)?.CutPlatform(deltaX);
                 _character.ResetSpeedMultiplier();
             }
